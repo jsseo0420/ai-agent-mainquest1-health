@@ -6,10 +6,14 @@ import { getEquipmentById } from "@/data/equipment";
 import { useFavorites } from "@/lib/storage/favorites";
 
 export default function FavoriteList() {
-  const favorites = useFavorites();
+  const { favorites, loading } = useFavorites();
   const items = favorites
     .map((f) => getEquipmentById(f.equipmentId))
     .filter((e) => e !== undefined);
+
+  if (loading) {
+    return <p className="py-12 text-center text-sub">불러오는 중…</p>;
+  }
 
   if (items.length === 0) {
     return (

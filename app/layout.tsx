@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import AuthSync from "@/components/AuthSync";
 import BottomNav from "@/components/BottomNav";
 import "./globals.css";
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full">
         <div className="mx-auto min-h-full max-w-xl px-4 pb-24">{children}</div>
         <BottomNav />
+        <AuthSync />
       </body>
     </html>
   );

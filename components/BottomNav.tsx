@@ -7,6 +7,7 @@ const tabs = [
   { href: "/", label: "홈", icon: HomeIcon, match: (p: string) => p === "/" || p.startsWith("/equipment") || p.startsWith("/muscles") },
   { href: "/favorites", label: "즐겨찾기", icon: StarIcon, match: (p: string) => p.startsWith("/favorites") },
   { href: "/logs", label: "운동 기록", icon: NoteIcon, match: (p: string) => p.startsWith("/logs") },
+  { href: "/account", label: "내 정보", icon: UserIcon, match: (p: string) => p.startsWith("/account") },
 ];
 
 export default function BottomNav() {
@@ -51,6 +52,15 @@ export function StarIcon({ filled = false }: { filled?: boolean }) {
   return (
     <svg viewBox="0 0 24 24" className="h-6 w-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" aria-hidden>
       <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" strokeLinecap="round" />
     </svg>
   );
 }

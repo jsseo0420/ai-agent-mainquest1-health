@@ -38,7 +38,7 @@ export default function WorkoutLogs() {
   const presetId = searchParams.get("equipment");
   const preset = presetId ? getEquipmentById(presetId) : undefined;
 
-  const logs = useWorkoutLogs();
+  const { logs, loading } = useWorkoutLogs();
   const [formOpen, setFormOpen] = useState(Boolean(preset));
 
   return (
@@ -59,7 +59,9 @@ export default function WorkoutLogs() {
         </button>
       )}
 
-      {logs.length === 0 ? (
+      {loading ? (
+        <p className="py-12 text-center text-sub">불러오는 중…</p>
+      ) : logs.length === 0 ? (
         <div className="mt-6 rounded-2xl bg-surface px-4 py-12 text-center">
           <p className="font-semibold">아직 운동 기록이 없어요</p>
           <p className="mt-1 text-sm text-sub">오늘 한 운동을 기록해 보세요.</p>
@@ -84,6 +86,7 @@ export default function WorkoutLogs() {
 
 function LogItem({ log }: { log: WorkoutLog }) {
   const equipment = getEquipmentById(log.equipmentId);
+  const [error, setError] = useState<string | null>(null);
   return (
     <li className="flex items-start gap-3 rounded-2xl border border-line p-3">
       <div className="min-w-0 flex-1">
@@ -98,11 +101,16 @@ function LogItem({ log }: { log: WorkoutLog }) {
           {log.weightKg}kg × {log.reps}회 × {log.sets}세트
         </p>
         {log.memo && <p className="mt-1 text-sm text-sub">{log.memo}</p>}
+        {error && (
+          <p role="alert" className="mt-1 text-xs text-red-600">
+            {error}
+          </p>
+        )}
       </div>
       <button
         type="button"
-        onClick={() => {
-          if (window.confirm("이 기록을 삭제할까요?")) deleteWorkoutLog(log.id);
+        onClick={async () => {
+          if (window.confirm("이 기록을 삭제할까요?")) setError(await deleteWorkoutLog(log.id));
         }}
         className="h-11 shrink-0 rounded-xl px-3 text-sm text-sub hover:bg-surface hover:text-red-600"
       >
@@ -122,8 +130,10 @@ function LogForm({
   onDone: () => void;
 }) {
   const [errors, setErrors] = useState<Errors>({});
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const equipmentId = String(form.get("equipment") ?? "");
@@ -136,13 +146,24 @@ function LogForm({
     const next: Errors = {};
     if (!getEquipmentById(equipmentId)) next.equipment = "기구를 선택해 주세요.";
     if (!Number.isFinite(weight) || weight <= 0) next.weight = "0보다 커야 해요";
+    else if (weight >= 10000) next.weight = "너무 커요";
     if (!Number.isInteger(reps) || reps <= 0) next.reps = "1 이상 정수";
     if (!Number.isInteger(sets) || sets <= 0) next.sets = "1 이상 정수";
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
-    addWorkoutLog({ equipmentId, date, weightKg: weight, reps, sets, memo: memo || undefined });
-    onDone();
+    setSaving(true);
+    const error = await addWorkoutLog({
+      equipmentId,
+      date,
+      weightKg: weight,
+      reps,
+      sets,
+      memo: memo || undefined,
+    });
+    setSaving(false);
+    setSaveError(error);
+    if (!error) onDone();
   }
 
   const inputClass =
@@ -192,6 +213,12 @@ function LogForm({
         <input id="log-memo" name="memo" type="text" maxLength={100} placeholder="예: 마지막 세트 힘들었음" className={inputClass} />
       </Field>
 
+      {saveError && (
+        <p role="alert" className="text-sm text-red-600">
+          {saveError}
+        </p>
+      )}
+
       <div className="flex gap-2 pt-1">
         <button
           type="button"
@@ -202,9 +229,10 @@ function LogForm({
         </button>
         <button
           type="submit"
-          className="h-12 flex-[2] rounded-xl bg-accent font-semibold text-white hover:bg-accent-strong"
+          disabled={saving}
+          className="h-12 flex-[2] rounded-xl bg-accent font-semibold text-white hover:bg-accent-strong disabled:opacity-60"
         >
-          저장
+          {saving ? "저장 중…" : "저장"}
         </button>
       </div>
     </form>
