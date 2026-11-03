@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 개인 복습 노트 (GitHub에 올리지 않음)
+/study-notes.html
+/docs/study-notes.md
