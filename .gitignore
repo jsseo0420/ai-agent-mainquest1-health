@@ -41,5 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# 개인 복습 노트 원본 (GitHub에 올리지 않음)
+# 개인 복습 노트 (GitHub에 올리지 않음)
+/study-notes.html
 /docs/study-notes.md
