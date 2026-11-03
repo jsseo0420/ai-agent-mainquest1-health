@@ -326,7 +326,9 @@ type WorkoutLog = {
 | 6 | SVG 인체 그림과 부위로 찾기 | 이번 |
 | 7 | 즐겨찾기, 운동 기록 (`localStorage`) | 이번 |
 | 8 | 모바일 확인 후 배포 | 이번 |
-| 9 | Supabase 연동: 로그인, 데이터 동기화 | 다음 단계 |
+| 9 | DB 설계 (10장) | 백엔드 |
+| 10 | Supabase 프로젝트 생성, 스키마·RLS 적용, 환경변수 등록 | 백엔드 |
+| 11 | 로그인/회원가입 화면, 즐겨찾기·기록을 Supabase로 전환 | 백엔드 |
 
 ## 7. 성공 기준
 
@@ -340,7 +342,6 @@ type WorkoutLog = {
 
 | 항목 | 메모 |
 |---|---|
-| **[미정]** 로그인 방식 | 이메일+비밀번호 / Google 등 소셜 로그인 (다음 단계) |
 | **[미정]** 운동 기록 입력 항목 | 현재: 무게·횟수·세트·메모. 세트별 무게 기록이 필요한지 |
 | **[미정]** 디자인 톤 | 색상, 다크 모드 지원 여부 |
 | **[미정]** 서비스 주소 | Vercel 기본 도메인 사용 여부 |
@@ -354,3 +355,103 @@ type WorkoutLog = {
 | 무료 이미지 라이선스 조건 | 상업적 이용·출처 표기 조건을 확인하고 출처를 기록 |
 | 운동 자세 설명의 정확성 | 일반적으로 알려진 자세 기준으로 작성하고, 부상 위험 관련 주의사항을 반드시 포함 |
 | SVG 인체 그림의 작은 부위 터치 어려움 | 부위 이름 버튼을 함께 제공 |
+| 이메일 인증을 끈 상태에서는 남의 이메일로도 가입 가능 | 이메일로 무언가를 보내는 기능이 없어 영향이 작음. 정식 서비스 전에 SMTP를 붙이고 인증을 켬 |
+
+---
+
+## 10. 백엔드 설계 (Supabase)
+
+2026-11-03 확정. 4.2의 "나중에 백엔드가 필요한 기능" 중 로그인과 데이터 동기화를 구현하기 위한 설계다.
+
+### 10.1 결정 사항
+
+| 항목 | 결정 |
+|---|---|
+| 로그인 방식 | **이메일 + 비밀번호** (Supabase Auth). Google 로그인은 나중에 추가 |
+| 이메일 인증 | **지금은 끄고 나중에 켠다.** 무료 플랜 기본 메일은 발송 한도가 작아 테스트·배포 일정에 방해가 된다. 정식 서비스 전에 SMTP를 연결하고 켠다 |
+| 기구 데이터 | 계속 코드(`data/equipment.ts`)에 둔다. 관리자 기능을 만들 때 `equipment` 테이블로 옮긴다 |
+| 데이터 보호 | 모든 테이블에 **RLS**를 켜고 "로그인한 본인 데이터만" 접근하게 한다 |
+
+### 10.2 민감 정보와 환경변수
+
+- **사용자 비밀번호는 우리 DB와 환경변수 어디에도 저장하지 않는다.** Supabase Auth가 `auth.users`에 해시로 저장한다.
+- Supabase 연결 정보는 환경변수로 관리한다. 예시는 `.env.example`에 있다.
+
+| 변수 | 노출 | 설명 |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | 브라우저에 노출 가능 | 프로젝트 주소 |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | 브라우저에 노출 가능 | 공개 키. 데이터 보호는 RLS가 담당 |
+| `SUPABASE_SECRET_KEY` | **노출 금지** | RLS를 무시하는 관리자 키. 이번 범위에서는 사용하지 않음 |
+
+- 로컬: `.env.local` (`.gitignore`에 포함되어 커밋되지 않음)
+- 배포: Vercel 대시보드의 Environment Variables에 등록
+
+### 10.3 테이블
+
+```mermaid
+erDiagram
+    auth_users ||--o| profiles : "1:1"
+    auth_users ||--o{ favorites : "1:N"
+    auth_users ||--o{ workout_logs : "1:N"
+
+    auth_users {
+        uuid id PK "Supabase Auth가 관리"
+        text email
+    }
+    profiles {
+        uuid id PK "FK → auth.users"
+        text nickname "1~20자, 선택"
+        timestamptz created_at
+    }
+    favorites {
+        uuid user_id PK "FK → auth.users"
+        text equipment_id PK "예: leg-press"
+        timestamptz created_at
+    }
+    workout_logs {
+        uuid id PK
+        uuid user_id FK
+        text equipment_id
+        date date
+        numeric weight_kg "0 초과"
+        int reps "1 이상"
+        int sets "1 이상"
+        text memo "100자 이하, 선택"
+        timestamptz created_at
+    }
+```
+
+| 테이블 | 설명 |
+|---|---|
+| `profiles` | 닉네임 표시용. 가입 시 트리거(`handle_new_user`)가 자동 생성 |
+| `favorites` | `(user_id, equipment_id)` 기본키로 중복 즐겨찾기 방지 |
+| `workout_logs` | 화면의 입력 검사(R5-2)를 DB 제약조건으로도 적용. `(user_id, date)` 인덱스로 날짜별 조회 |
+
+- 모든 테이블은 `auth.users` 삭제 시 `on delete cascade`로 함께 삭제된다.
+- `equipment_id`는 외래키 대신 형식(`^[a-z0-9-]{1,64}$`)만 DB에서 검사하고, 실제 존재 여부는 앱에서 검사한다.
+- SQL: `supabase/migrations/20261103000000_init.sql`
+
+### 10.4 RLS 정책
+
+조건은 모두 `(select auth.uid()) = user_id` (profiles는 `= id`)이며, 비로그인 사용자(`anon`)는 테이블 권한 자체를 회수한다.
+
+| 테이블 | 조회 | 추가 | 수정 | 삭제 |
+|---|---|---|---|---|
+| profiles | 본인 | ✕ (트리거가 생성) | 본인 | ✕ (계정 삭제 시 cascade) |
+| favorites | 본인 | 본인 | ✕ | 본인 |
+| workout_logs | 본인 | 본인 | 본인 | 본인 |
+
+### 10.5 확인할 조건
+
+| ID | 조건 |
+|---|---|
+| B-1 | 비로그인 상태로 API를 호출하면 세 테이블 모두 데이터를 읽거나 쓸 수 없다 |
+| B-2 | 사용자 A로 로그인해 사용자 B의 기록을 조회·수정·삭제하려 하면 결과가 0건이다 |
+| B-3 | 다른 사람의 `user_id`로 기록을 추가하면 거부된다 |
+| B-4 | 무게 0, 횟수 0, 101자 메모를 넣으면 DB가 거부한다 |
+| B-5 | 가입하면 `profiles` 행이 자동으로 생긴다 |
+| B-6 | 계정을 삭제하면 그 사용자의 즐겨찾기·기록도 삭제된다 |
+
+### 10.6 로그인 전 데이터 처리
+
+로그인 전에는 지금처럼 `localStorage`를 사용한다. 처음 로그인하면 `localStorage`의 즐겨찾기·기록을 서버로 옮기고 브라우저 데이터를 비운다. (4.3 참고)
