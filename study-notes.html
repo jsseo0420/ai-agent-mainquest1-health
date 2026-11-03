@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>복습 노트: 나만의 헬스도감 (메인퀘스트1)</title>
+<style>
+  :root {
+    --bg: #ffffff; --surface: #f6f5f3; --ink: #1c1b1a; --sub: #6b6763; --line: #e7e5e2;
+    --accent: #0f9f6e; --accent-strong: #0b7a54; --accent-bg: #e8f8f1; --code-bg: #f3f2ef;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413; --surface: #1d1c1a; --ink: #ecebe8; --sub: #a29e98; --line: #2e2d2a;
+      --accent: #3cc795; --accent-strong: #5bd6a8; --accent-bg: #16322a; --code-bg: #22211f;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.75 "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    word-break: keep-all; overflow-wrap: anywhere;
+  }
+  .layout { max-width: 1120px; margin: 0 auto; padding: 32px 16px 80px; display: grid; gap: 40px; }
+  @media (min-width: 960px) { .layout { grid-template-columns: 220px minmax(0, 1fr); padding-top: 48px; } }
+  nav.toc { font-size: 14px; }
+  @media (min-width: 960px) { nav.toc { position: sticky; top: 24px; align-self: start; max-height: calc(100vh - 48px); overflow: auto; } }
+  nav.toc p { margin: 0 0 8px; font-weight: 700; color: var(--sub); font-size: 12px; letter-spacing: .04em; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--line); }
+  nav.toc a { display: block; padding: 4px 12px; color: var(--sub); text-decoration: none; border-left: 2px solid transparent; margin-left: -2px; }
+  nav.toc a:hover, nav.toc a.active { color: var(--accent-strong); border-left-color: var(--accent); }
+  main { min-width: 0; }
+  h1 { font-size: 30px; line-height: 1.3; margin: 0 0 12px; letter-spacing: -.01em; }
+  h2 { font-size: 22px; margin: 48px 0 12px; padding-top: 8px; }
+  h3 { font-size: 17px; margin: 28px 0 8px; color: var(--accent-strong); }
+  p { margin: 10px 0; }
+  a { color: var(--accent-strong); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  li > ul, li > ol { margin: 4px 0; }
+  code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: .88em; background: var(--code-bg); padding: 2px 6px; border-radius: 6px; }
+  pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; line-height: 1.55; }
+  pre code { background: none; padding: 0; font-size: 13.5px; }
+  blockquote { margin: 12px 0; padding: 10px 14px; border-left: 4px solid var(--accent); background: var(--accent-bg); border-radius: 0 10px 10px 0; color: var(--ink); }
+  .table { overflow-x: auto; margin: 12px 0; border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  th { background: var(--surface); font-weight: 700; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  td code { white-space: nowrap; }
+  main > h1 + p, main > h1 + p + ul { color: var(--sub); }
+  @media print { nav.toc { display: none; } .layout { display: block; } h2 { break-after: avoid; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="toc" aria-label="목차"><p>목차</p><ol><li><a href="#한눈에-보기">한눈에 보기</a></li><li><a href="#1-저장소-연결">1. 저장소 연결</a></li><li><a href="#2-인터뷰로-prd-작성">2. 인터뷰로 PRD 작성</a></li><li><a href="#3-목업-데이터로-화면-구현">3. 목업 데이터로 화면 구현</a></li><li><a href="#4-db-설계와-rls">4. DB 설계와 RLS</a></li><li><a href="#5-로그인과-데이터-연동">5. 로그인과 데이터 연동</a></li><li><a href="#6-supabase-설정과-보안-검증">6. Supabase 설정과 보안 검증</a></li><li><a href="#7-규칙-파일-mcp-스킬">7. 규칙 파일, MCP, 스킬</a></li><li><a href="#8-기구-사진과-운동-자세-그림">8. 기구 사진과 운동 자세 그림</a></li><li><a href="#9-vercel-배포">9. Vercel 배포</a></li><li><a href="#10-회고">10. 회고</a></li><li><a href="#자주-쓴-명령">자주 쓴 명령</a></li><li><a href="#claude-code에-요청할-때-효과적이었던-방식">Claude Code에 요청할 때 효과적이었던 방식</a></li><li><a href="#다시-해-볼-만한-연습">다시 해 볼 만한 연습</a></li></ol></nav>
+  <main>
+<h1>복습 노트: 나만의 헬스도감 (메인퀘스트1)</h1>
+<p>2026-11-03 하루 동안 Claude Code와 함께 기획부터 배포까지 진행한 과정을 복습용으로 정리했다. 각 단계마다 <strong>내가 한 요청</strong>, <strong>결정한 것</strong>, <strong>배운 개념</strong>, <strong>겪은 문제</strong>를 적었다.</p>
+<ul>
+<li>서비스: <a href="https://ai-agent-mainquest1-health.vercel.app" target="_blank" rel="noopener">https://ai-agent-mainquest1-health.vercel.app</a>
+</li>
+<li>저장소: <a href="https://github.com/jsseo0420/ai-agent-mainquest1-health" target="_blank" rel="noopener">https://github.com/jsseo0420/ai-agent-mainquest1-health</a>
+</li>
+<li>관련 문서: <a href="PRD.md">PRD.md</a>, <a href="README.md">README.md</a>, <a href="CLAUDE.md">CLAUDE.md</a>
+</li></ul>
+<hr>
+<h2 id="한눈에-보기">한눈에 보기</h2>
+<div class="table"><table><thead><tr><th>시각</th><th>커밋</th><th>단계</th></tr></thead><tbody><tr><td>14:27</td><td><code>b19a342</code></td><td>1. 저장소 연결, README 작성</td></tr><tr><td>14:49</td><td><code>8769a21</code></td><td>2. 인터뷰로 PRD 작성</td></tr><tr><td>14:51</td><td><code>97cf974</code></td><td>2. 기구 20개 목록 확정</td></tr><tr><td>15:15</td><td><code>779db87</code></td><td>3. 목업 데이터로 화면 구현</td></tr><tr><td>15:27</td><td><code>f8c13f9</code></td><td>4. DB 설계와 RLS</td></tr><tr><td>15:34</td><td><code>3a592be</code></td><td>5. 로그인과 데이터 연동</td></tr><tr><td>16:10</td><td><code>561d156</code></td><td>7. 규칙 파일, MCP, 스킬</td></tr><tr><td>16:58</td><td><code>eb1a667</code></td><td>8. 기구 사진과 자세 그림</td></tr><tr><td>17:15</td><td><code>77d2f62</code></td><td>9. 배포, 서비스 주소 반영</td></tr><tr><td>17:20</td><td><code>6ebbd58</code></td><td>10. 회고</td></tr></tbody></table></div>
+<blockquote>6단계(Supabase 설정과 보안 검증)는 대시보드 작업과 테스트라 커밋이 없다.</blockquote>
+<p>특정 시점의 코드를 다시 보고 싶으면:</p>
+<pre><code data-lang="bash">git show 779db87 --stat</code></pre>
+<hr>
+<h2 id="1-저장소-연결">1. 저장소 연결</h2>
+<p><strong>요청:</strong> "이 폴더랑 GitHub 저장소 연결하고 README 만들어서 커밋, 푸시해줘"</p>
+<p><strong>한 일</strong></p>
+<pre><code data-lang="bash">git init -b main
+git remote add origin https://github.com/jsseo0420/ai-agent-mainquest1-health.git
+git add README.md
+git commit -m "Add README"
+git push -u origin main</code></pre>
+<p><strong>배운 것</strong></p>
+<ul>
+<li><code>-u</code>(upstream)로 한 번 연결해 두면 이후에는 <code>git push</code>만 하면 된다.
+</li>
+<li>빈 원격 저장소에는 첫 커밋을 그대로 올리면 된다.
+</li></ul>
+<hr>
+<h2 id="2-인터뷰로-prd-작성">2. 인터뷰로 PRD 작성</h2>
+<p><strong>요청:</strong> "PRD 먼저 작성할 거야. 서비스 목적, 핵심 화면, 필요한 기능, 개발 경험, 시간을 한 번에 하나씩 물어봐 줘. 아직 정하지 않은 내용은 따로 표시해 줘."</p>
+<p><strong>인터뷰에서 정한 것</strong></p>
+<div class="table"><table><thead><tr><th>질문</th><th>내 답</th></tr></thead><tbody><tr><td>누구의 어떤 문제?</td><td>헬스장에서 기구 앞에 서서 사용법을 확인하려는 입문자, 특정 근육에 맞는 기구를 찾는 입문자</td></tr><tr><td>첫 화면</td><td>"기구로 찾기" / "부위로 찾기" 두 갈래. 부위로 찾기는 인체 그림 활용</td></tr><tr><td>기구 상세</td><td>기구 사진, 운동 자세, 자극 부위, 주의사항 (영상은 나중에)</td></tr><tr><td>기능</td><td>검색, 즐겨찾기, 부위 필터, 로그인, 운동 기록 (관리자 기능은 나중에)</td></tr><tr><td>데이터</td><td>대표 기구 20개</td></tr><tr><td>개발 경험</td><td>Claude Code로 프론트·백엔드·배포 경험 있음</td></tr><tr><td>시간</td><td>내일까지 배포, 오늘 하루 종일 가능</td></tr><tr><td>이미지</td><td>인체 그림은 SVG 직접 제작, 기구 사진은 무료 이미지 (→ 나중에 직접 제공으로 바뀜)</td></tr></tbody></table></div>
+<p><strong>PRD에 꼭 넣으라고 한 항목</strong></p>
+<ol>
+<li>서비스 목적: 누구의 어떤 문제를 해결하는가
+</li>
+<li>핵심 화면: 화면별 역할과 이동 흐름
+</li>
+<li>요구사항: 사용자가 할 수 있어야 하는 일과 <strong>확인할 조건</strong>
+</li>
+<li>이번 구현 범위: <strong>목업 데이터로 구현할 것</strong>과 <strong>나중에 백엔드가 필요한 것</strong> 구분
+</li>
+<li>프레임워크 선택과 근거
+</li></ol>
+<p><strong>배운 것</strong></p>
+<ul>
+<li>한 번에 하나씩 질문받으면 놓치는 부분이 적다. 모르는 건 <strong>[미정]</strong>으로 남겨 두면 진행이 막히지 않는다.
+</li>
+<li>요구사항에 "확인할 조건"을 구체적으로 적으면 그대로 테스트 기준이 된다.
+<ul>
+<li>예: R1-2 "레그"를 검색하면 레그 프레스, 레그 익스텐션, 레그 컬만 보인다
+</li></ul>
+</li>
+<li>마감이 짧을 때는 <strong>우선순위(P0/P1)</strong>를 나눠 핵심부터 배포할 수 있게 한다.
+</li>
+<li>mermaid로 화면 이동 흐름을 그리면 GitHub에서 그림으로 보인다.
+</li></ul>
+<p><strong>프레임워크 선택 근거 (요약)</strong></p>
+<ul>
+<li><strong>Next.js + TypeScript + Tailwind</strong>: 라우팅·빌드가 기본 제공되고, 기구 상세 20개를 정적 페이지로 미리 만들 수 있다
+</li>
+<li><strong>Vercel</strong>: GitHub에 푸시하면 자동 배포
+</li>
+<li><strong>Supabase</strong>: 로그인과 DB를 한 번에 제공, 별도 서버 불필요
+</li></ul>
+<hr>
+<h2 id="3-목업-데이터로-화면-구현">3. 목업 데이터로 화면 구현</h2>
+<p><strong>요청:</strong> "커밋 후 시작"</p>
+<p><strong>만든 것</strong></p>
+<div class="table"><table><thead><tr><th>화면</th><th>경로</th><th>핵심</th></tr></thead><tbody><tr><td>홈</td><td><code>/</code></td><td>검색창, 두 갈래 버튼</td></tr><tr><td>기구 목록</td><td><code>/equipment</code></td><td>검색 + 부위 필터, 검색어가 주소(<code>?q=</code>, <code>?group=</code>)에 남음</td></tr><tr><td>기구 상세</td><td><code>/equipment/[slug]</code></td><td>20개를 빌드 시 정적 생성</td></tr><tr><td>부위로 찾기</td><td><code>/muscles</code></td><td>앞·뒤 SVG 인체 그림, 부위 버튼</td></tr><tr><td>즐겨찾기 / 운동 기록</td><td><code>/favorites</code>, <code>/logs</code></td><td><code>localStorage</code>에 저장</td></tr></tbody></table></div>
+<p><strong>설계 포인트</strong></p>
+<ul>
+<li>기구 데이터는 <code>data/equipment.ts</code> 한 파일에 모았다.
+</li>
+<li>즐겨찾기·기록은 화면에서 <code>localStorage</code>를 직접 쓰지 않고 <strong><code>lib/storage/</code> 모듈을 거치게</strong> 했다. → 나중에 Supabase로 바꿀 때 이 모듈만 고치면 됐다.
+</li>
+<li>SVG 인체 그림은 몸의 왼쪽 절반만 그리고 좌우 반전해서 오른쪽을 그렸다.
+</li></ul>
+<p><strong>겪은 문제</strong></p>
+<div class="table"><table><thead><tr><th>문제</th><th>해결</th></tr></thead><tbody><tr><td><code>create-next-app</code>이 README·PRD가 있는 폴더에 설치를 거부</td><td>임시 폴더에 만들고 파일을 옮김</td></tr><tr><td>Next.js 16은 학습 데이터와 API가 다름 (<code>AGENTS.md</code> 경고)</td><td><code>node_modules/next/dist/docs/</code>의 문서를 먼저 읽고 작성</td></tr><tr><td>상세 페이지에서 "params accessed outside of Suspense" 경고</td><td>주소 값을 읽는 부분을 <code>&lt;Suspense&gt;</code>로 감쌈</td></tr></tbody></table></div>
+<p><strong>배운 것</strong></p>
+<ul>
+<li>Next.js 16의 <strong>Cache Components</strong>에서는 주소 값(<code>params</code>, <code>searchParams</code>)이나 세션을 읽는 부분을 <code>&lt;Suspense&gt;</code> 안에 둬야 페이지 이동이 즉시 시작된다.
+</li>
+<li>화면 확인은 빌드 통과만으로 끝내지 않고, 모바일(375px) 크기에서 실제로 눌러 보며 확인한다.
+</li></ul>
+<hr>
+<h2 id="4-db-설계와-rls">4. DB 설계와 RLS</h2>
+<p><strong>요청:</strong> "백엔드를 구축하자. 민감 정보는 환경변수로 저장하고 RLS를 적용할 건데, 먼저 DB 구조를 설계해야겠지?"</p>
+<p><strong>결정한 것</strong></p>
+<div class="table"><table><thead><tr><th>항목</th><th>결정</th></tr></thead><tbody><tr><td>로그인 방식</td><td>이메일 + 비밀번호 (Google은 나중에)</td></tr><tr><td>이메일 인증</td><td>지금은 끄고 나중에 켜기 (무료 플랜 메일 발송 한도가 작음)</td></tr><tr><td>기구 데이터</td><td>DB로 옮기지 않고 코드에 유지</td></tr></tbody></table></div>
+<p><strong>테이블</strong></p>
+<div class="table"><table><thead><tr><th>테이블</th><th>용도</th><th>포인트</th></tr></thead><tbody><tr><td><code>profiles</code></td><td>닉네임</td><td>가입 시 트리거로 자동 생성</td></tr><tr><td><code>favorites</code></td><td>즐겨찾기</td><td><code>(user_id, equipment_id)</code> 기본키로 중복 방지</td></tr><tr><td><code>workout_logs</code></td><td>운동 기록</td><td>무게 &gt; 0, 횟수·세트 ≥ 1, 메모 100자 이하를 <strong>DB 제약조건</strong>으로도 검사</td></tr></tbody></table></div>
+<p>SQL: <a href="supabase/migrations/20261103000000_init.sql"><code>supabase/migrations/20261103000000_init.sql</code></a></p>
+<p><strong>RLS 정책의 기본 형태</strong></p>
+<pre><code data-lang="sql">alter table public.favorites enable row level security;
+revoke all on table public.favorites from anon;  -- 비로그인은 아예 접근 불가
+
+create policy "favorites: 본인 조회"
+  on public.favorites for select to authenticated
+  using ((select auth.uid()) = user_id);</code></pre>
+<p><strong>배운 개념</strong></p>
+<ul>
+<li><strong>RLS(Row Level Security)</strong>: 테이블의 "행" 단위로 누가 읽고 쓸 수 있는지 DB가 직접 검사한다. 앱 코드에 버그가 있어도 DB가 막아 준다.
+</li>
+<li><code>using</code>은 기존 행을 읽거나 고칠 때의 조건, <code>with check</code>는 새로 넣거나 바뀐 행이 지켜야 할 조건이다.
+</li>
+<li><code>auth.uid()</code>를 <code>(select auth.uid())</code>로 감싸면 행마다 다시 계산하지 않아 빠르다.
+</li>
+<li>필요 없는 동작은 정책을 만들지 않는다. (즐겨찾기는 수정할 일이 없어 update 정책 없음)
+</li>
+<li><code>security definer</code> 함수(관리자 권한으로 실행)는 API로 직접 호출하지 못하게 실행 권한을 회수한다.
+</li></ul>
+<p><strong>환경변수와 키</strong></p>
+<div class="table"><table><thead><tr><th>변수</th><th>브라우저 노출</th><th>설명</th></tr></thead><tbody><tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>괜찮음</td><td>프로젝트 주소</td></tr><tr><td><code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code></td><td>괜찮음</td><td>공개 키. <strong>데이터 보호는 RLS가 담당</strong></td></tr><tr><td>Secret key (<code>sb_secret_</code>, <code>service_role</code>)</td><td><strong>절대 안 됨</strong></td><td>RLS를 무시하는 관리자 키. 사용하지 않음</td></tr></tbody></table></div>
+<ul>
+<li>사용자 <strong>비밀번호는 우리 DB에도 환경변수에도 없다.</strong> Supabase Auth가 해시로 따로 관리한다.
+</li>
+<li><code>.env.local</code>은 <code>.gitignore</code>에 포함되어 커밋되지 않는다. 예시는 <code>.env.example</code>로 공유한다.
+</li>
+<li><code>NEXT_PUBLIC_</code>이 붙은 변수만 브라우저 코드에 들어간다.
+</li></ul>
+<hr>
+<h2 id="5-로그인과-데이터-연동">5. 로그인과 데이터 연동</h2>
+<p><strong>요청:</strong> "지금까지 내용 커밋 먼저 하고 로그인, 데이터 연동 코드 작성해줘"</p>
+<p><strong>구조</strong></p>
+<ul>
+<li>로그인과 데이터 조회는 <strong>브라우저에서 Supabase로 직접</strong> 한다.
+<ul>
+<li>서버에서 세션(쿠키)을 읽으면 Cache Components 때문에 정적 페이지가 깨진다.
+</li>
+<li>공개 키가 브라우저에 있어도 RLS가 본인 데이터만 허용하므로 안전하다.
+</li></ul>
+</li>
+<li><code>lib/storage/favorites.ts</code>, <code>logs.ts</code>: <strong>로그인 전은 <code>localStorage</code>, 로그인 후는 Supabase</strong>
+</li>
+<li>처음 로그인하면 이 기기에 있던 데이터를 계정으로 옮긴다. 실패하면 남겨 두고 다음에 다시 시도한다.
+</li>
+<li>즐겨찾기는 화면을 먼저 바꾸고, 서버 저장에 실패하면 되돌린다. (낙관적 업데이트)
+</li>
+<li>환경변수가 없으면 오류 없이 <code>localStorage</code> 모드로 동작한다.
+</li>
+<li>Supabase의 영어 오류 메시지를 한국어로 바꿔 보여준다.
+</li></ul>
+<p><strong>배운 것</strong></p>
+<ul>
+<li>저장소를 한곳에 모아 둔 덕분에 화면 코드는 거의 고치지 않고 백엔드를 붙였다.
+</li>
+<li>코드가 정상 동작해도, <strong>실제 Supabase 프로젝트로 확인하기 전까지는 "검증 안 됨"</strong>이라고 구분해야 한다.
+</li></ul>
+<hr>
+<h2 id="6-supabase-설정과-보안-검증">6. Supabase 설정과 보안 검증</h2>
+<p><strong>내가 직접 한 일 (대시보드)</strong></p>
+<ol>
+<li>Supabase 프로젝트 생성 (지역: Seoul)
+</li>
+<li>SQL Editor에서 마이그레이션 실행
+</li>
+<li>Authentication → Sign In / Providers → <strong>User Signups</strong> 영역에서 Confirm email 끄기
+</li>
+<li><code>.env.local</code> 작성 (URL, Publishable key)
+</li>
+<li>회원가입·로그인, 두 번째 계정으로 테스트
+</li></ol>
+<p><strong>겪은 문제</strong></p>
+<div class="table"><table><thead><tr><th>문제</th><th>원인</th><th>해결</th></tr></thead><tbody><tr><td><code>relation "profiles" already exists</code></td><td>첫 실행에서 이미 만들어짐. 두 번째 실행은 첫 줄에서 멈춰 영향 없음</td><td>확인용 쿼리는 <strong>+ New query</strong>로 새 탭에서 실행</td></tr><tr><td>Confirm email 항목이 안 보임</td><td>Email 설정 창 안이 아니라 페이지 맨 위 User Signups 영역에 있음</td><td>창을 닫고 페이지 상단에서 찾음</td></tr><tr><td>Project URL을 못 찾음</td><td>메뉴 위치가 바뀜</td><td><code>https://&lt;프로젝트 ID&gt;.supabase.co</code> 형식으로 직접 만듦. ID는 주소창 <code>project/</code> 뒤에 있음</td></tr><tr><td>가입했는데 로그인 안 된 것처럼 보임</td><td>평소 쓰는 브라우저에서 가입해서, 테스트 브라우저와 세션이 달랐음</td><td>서버 로그로 원인 파악. 두 브라우저를 "두 기기"로 써서 동기화 확인</td></tr></tbody></table></div>
+<p><strong>보안 검증 결과 (PRD 10.5)</strong></p>
+<div class="table"><table><thead><tr><th>ID</th><th>시도</th><th>결과</th></tr></thead><tbody><tr><td>B-1</td><td>비로그인으로 조회·추가</td><td>모두 거부 (<code>42501</code>)</td></tr><tr><td>B-2</td><td>다른 계정 데이터 조회·수정·삭제</td><td>0건</td></tr><tr><td>B-3</td><td>다른 사람 <code>user_id</code>로 추가</td><td>거부 (row-level security)</td></tr><tr><td>B-4</td><td>무게 0, 횟수 0, 101자 메모, 잘못된 기구 ID</td><td>거부 (<code>23514</code>)</td></tr><tr><td>B-5</td><td>가입 시 프로필 자동 생성</td><td>확인</td></tr></tbody></table></div>
+<p><strong>배운 것</strong></p>
+<ul>
+<li>RLS는 "화면에 안 보인다"로 끝내지 말고, <strong>다른 계정 세션으로 직접 수정·삭제 요청을 보내</strong> 확인해야 한다.
+</li>
+<li>오류 코드: <code>42501</code> = 권한 없음(RLS), <code>23514</code> = 제약조건 위반
+</li></ul>
+<hr>
+<h2 id="7-규칙-파일-mcp-스킬">7. 규칙 파일, MCP, 스킬</h2>
+<p><strong>요청:</strong> "MCP나 규칙 파일, skills도 넣고 싶은데 어떻게 넣는 게 좋을까?" → Supabase MCP는 <strong>읽기 전용</strong>으로</p>
+<div class="table"><table><thead><tr><th>파일</th><th>역할</th></tr></thead><tbody><tr><td><a href="CLAUDE.md"><code>CLAUDE.md</code></a></td><td>세션 시작 시 자동으로 읽히는 규칙. 구조, 코드 규칙, 보안 규칙, 완료 기준</td></tr><tr><td><a href=".mcp.json"><code>.mcp.json</code></a></td><td>MCP 서버 설정. next-devtools(개발 서버 오류·라우트 확인), Supabase(<code>read_only=true</code>, 이 프로젝트만)</td></tr><tr><td><a href=".claude/skills/add-equipment/SKILL.md"><code>.claude/skills/add-equipment</code></a></td><td>기구 추가·수정 절차</td></tr><tr><td><a href=".claude/skills/supabase-migration/SKILL.md"><code>.claude/skills/supabase-migration</code></a></td><td>DB 변경 절차, RLS 템플릿, 검증 방법</td></tr></tbody></table></div>
+<p><strong>배운 것</strong></p>
+<ul>
+<li>세 가지 모두 <strong>프로젝트 폴더에 파일로 두고 커밋</strong>하면, 다음 세션이나 다른 사람도 같은 규칙과 도구를 쓴다.
+</li>
+<li><code>CLAUDE.md</code>에서 <code>@AGENTS.md</code>처럼 다른 파일을 불러올 수 있다.
+</li>
+<li>MCP 설정에 <strong>토큰을 적지 않고</strong> OAuth 로그인 방식을 쓰면 git에 올려도 안전하다.
+</li>
+<li>Windows에서는 MCP 명령을 <code>cmd /c npx ...</code>로 실행한다.
+</li>
+<li>MCP와 스킬은 새 세션을 시작해야 인식된다. (이번에는 스킬이 바로 인식됐다)
+</li>
+<li>스킬은 반복 작업의 "절차서"다. 오늘 겪은 문제(SQL 재실행 오류 등)를 스킬에 적어 두면 다음에 같은 실수를 하지 않는다.
+</li></ul>
+<hr>
+<h2 id="8-기구-사진과-운동-자세-그림">8. 기구 사진과 운동 자세 그림</h2>
+<p><strong>요청:</strong> "체스트 프레스, 펙덱 플라이, 플랫 벤치프레스 3개만 기구 이미지와 운동 자세 이미지를 넣고 싶어"</p>
+<p><strong>과정</strong></p>
+<ol>
+<li>Unsplash에서 무료 라이선스 사진을 찾아봤지만, 기구만 찍힌 사진이 없었고 펙덱은 검색 결과가 0건이었다.
+</li>
+<li>→ <strong>사진을 직접 제공</strong>하기로 바꿨다.
+</li>
+<li>정해진 경로에 넣기: <code>public/images/equipment/&lt;slug&gt;.jpg</code>, <code>public/images/posture/&lt;slug&gt;.jpg</code>
+</li></ol>
+<p><strong>화면 처리</strong></p>
+<ul>
+<li>상세 화면: 기구 사진은 잘리지 않게 전체 표시 (<code>object-contain</code>)
+</li>
+<li>목록 썸네일: 가로 사진이 작게 보여서 가운데를 채우게 표시 (<code>object-cover</code>)
+</li>
+<li>자세 그림: "운동 자세" 설명 위에 넣고, 누르면 원본 크기로 열림
+</li></ul>
+<p><strong>배운 것</strong></p>
+<ul>
+<li>무료 이미지는 <strong>라이선스(Unsplash+ 유료 제외)와 출처 표기</strong>를 확인해야 한다.
+</li>
+<li>원하는 사진이 없으면 직접 준비하는 게 가장 정확하고 저작권 걱정도 없다.
+</li>
+<li>파일 확장자(<code>.jpg</code>)와 실제 형식(PNG)이 달라도 브라우저와 Next.js는 내용을 보고 처리한다. 그래도 맞추는 게 좋다.
+</li>
+<li>사진이 없는 기구는 주동근을 강조한 인체 그림으로 대신 보여주게 해서, 일부만 있어도 화면이 어색하지 않다.
+</li></ul>
+<hr>
+<h2 id="9-vercel-배포">9. Vercel 배포</h2>
+<p><strong>요청:</strong> "배포는 무료로 하고 싶은데 가능해?" → Hobby 플랜(개인·비상업적 용도 무료)</p>
+<p><strong>순서</strong></p>
+<ol>
+<li><a href="https://vercel.com/new" target="_blank" rel="noopener">https://vercel.com/new</a> 에서 GitHub 저장소 Import ("Add New"가 안 보이면 이 주소로 바로 이동)
+</li>
+<li><strong>Deploy 전에</strong> Environment Variables에 <code>.env.local</code>의 두 값 등록 (Secret key는 넣지 않음)
+</li>
+<li>Deploy → <a href="https://ai-agent-mainquest1-health.vercel.app" target="_blank" rel="noopener">https://ai-agent-mainquest1-health.vercel.app</a>
+</li>
+<li>Supabase <strong>Authentication → URL Configuration</strong>의 Site URL을 배포 주소로 등록 (권장)
+</li></ol>
+<p><strong>배포 후 확인한 것</strong></p>
+<ul>
+<li>모든 페이지 200, 없는 주소 404, 사진 정상
+</li>
+<li>환경변수 적용: 내 정보 화면에 로그인 폼이 나옴
+</li>
+<li>배포된 JavaScript에 <strong>공개 키만</strong> 있는지 직접 열어 확인. <code>sb_secret_</code> 글자는 라이브러리의 키 종류 구분 코드였다.
+</li></ul>
+<p><strong>배운 것</strong></p>
+<ul>
+<li><code>main</code>에 푸시하면 Vercel이 자동으로 다시 배포한다.
+</li>
+<li>환경변수를 빼먹어도 사이트는 열리지만 로그인이 안 된다. (앱이 <code>localStorage</code> 모드로 동작하게 만들어 둔 덕분)
+</li>
+<li>Supabase 무료 프로젝트는 일주일 정도 사용이 없으면 일시 정지될 수 있다.
+</li></ul>
+<hr>
+<h2 id="10-회고">10. 회고</h2>
+<p>README의 <a href="README.md">회고</a> 섹션에 정리했다: 진행 과정, 잘한 점, 어려웠던 점과 해결, 배운 점, 다음에 할 일.</p>
+<hr>
+<h2 id="자주-쓴-명령">자주 쓴 명령</h2>
+<pre><code data-lang="bash">npm run dev      # 개발 서버
+npm run lint     # 코드 검사
+npm run build    # 프로덕션 빌드 (타입 검사 포함)
+git status --short
+git add &lt;파일&gt; &amp;&amp; git commit -m "메시지" &amp;&amp; git push</code></pre>
+<ul>
+<li>개발 서버가 켜진 상태에서 <code>npm run build</code>를 하면 <code>.next</code> 폴더가 겹쳐 개발 서버가 꼬일 수 있다. 빌드 전에 개발 서버를 멈춘다.
+</li>
+<li><code>.env.local</code>을 바꾼 뒤에는 개발 서버를 다시 시작해야 적용된다.
+</li></ul>
+<h2 id="claude-code에-요청할-때-효과적이었던-방식">Claude Code에 요청할 때 효과적이었던 방식</h2>
+<ul>
+<li>"<strong>먼저 인터뷰해 줘, 한 번에 하나씩</strong>": 요구사항을 빠짐없이 정리할 수 있었다.
+</li>
+<li>"<strong>아직 정하지 않은 건 따로 표시해 줘</strong>": 결정을 미뤄도 진행이 막히지 않았다.
+</li>
+<li>"<strong>먼저 DB 구조를 설계해야겠지?</strong>": 구현 전에 설계를 확인하고 넘어갈 수 있었다.
+</li>
+<li>"<strong>커밋 먼저 하고 ~해 줘</strong>": 단계마다 되돌아갈 지점이 생겼다.
+</li>
+<li>큰 기능은 "<strong>방법을 먼저 물어보고</strong>" 선택지 중에서 고르니 결과가 예측 가능했다. (MCP 읽기 전용, 이메일 인증 끄기 등)
+</li>
+<li>결과를 <strong>직접 화면에서 확인</strong>하고 이상한 점을 바로 알려주니 수정이 빨랐다.
+</li></ul>
+<h2 id="다시-해-볼-만한-연습">다시 해 볼 만한 연습</h2>
+<ol>
+<li>기구 하나를 <code>add-equipment</code> 스킬로 추가해 보기 (<code>/add-equipment</code>)
+</li>
+<li>운동 기록에 "세트별 무게"를 넣도록 <code>supabase-migration</code> 스킬로 테이블을 바꿔 보기
+</li>
+<li>Supabase 대시보드에서 테스트 계정을 삭제해 B-6(탈퇴 시 데이터 삭제) 확인하기
+</li>
+<li>다른 계정으로 RLS 검증(B-1~B-4)을 직접 다시 해 보기
+</li></ol>
+  </main>
+</div>
+<script>
+  // 지금 읽고 있는 단계를 목차에 표시한다.
+  const links = [...document.querySelectorAll("nav.toc a")];
+  const heads = links.map((a) => document.getElementById(a.hash.slice(1)));
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) {
+      links.forEach((a) => a.classList.toggle("active", a.hash === "#" + e.target.id));
+    }
+  }, { rootMargin: "0px 0px -70% 0px" });
+  heads.forEach((h) => h && io.observe(h));
+</script>
+</body>
+</html>
