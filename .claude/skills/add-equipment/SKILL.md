@@ -19,7 +19,7 @@ description: 헬스도감에 운동 기구를 추가하거나 기존 기구의 �
   secondaryMuscles: ["hamstrings", "adductors"], // 보조근 0~3개
   steps: [ /* 3~5단계 */ ],
   cautions: [ /* 2~3개 */ ],
-  // imageUrl, imageCredit: 사진이 있을 때만 (3번 참고)
+  // equipmentPhoto, posturePhoto: 사진이 있을 때만 (3번 참고)
 }
 ```
 
@@ -36,10 +36,12 @@ description: 헬스도감에 운동 기구를 추가하거나 기존 기구의 �
 
 ## 3. 사진 (선택)
 
-- Unsplash, Pixabay 등 무료 라이선스 이미지만 쓴다. 라이선스 조건(상업적 이용, 출처 표기)을 확인한다
-- `imageCredit`에 작가, 사이트, 원본 페이지 URL을 모두 적는다. 상세 화면에 그대로 표시된다
-- 외부 이미지 도메인을 처음 쓰면 `next.config.ts`의 `images.remotePatterns`에 추가해야 한다
-- 사진이 없으면 비워 둔다. 화면에서 주동근을 강조한 인체 그림으로 대신 보여준다
+- 사진은 사용자가 직접 제공한 파일을 쓴다. 인터넷에서 임의로 찾아 넣지 않는다
+- 파일 위치: 기구 사진 `public/images/equipment/<slug>.jpg`, 운동 자세 사진 `public/images/posture/<slug>.jpg`
+- 데이터: `equipmentPhoto` / `posturePhoto`에 `{ src: "/images/...", alt: "사진 설명" }`를 넣는다. `alt`는 사진에 보이는 내용을 한 문장으로 쓴다
+- 외부 무료 이미지를 쓰게 되면 라이선스를 확인하고 `credit`에 작가, 사이트, 원본 URL을 적는다. 직접 찍은 사진은 `credit`을 비운다
+- 사진이 없으면 비워 둔다. 기구 사진은 주동근을 강조한 인체 그림으로 대신 보여주고, 자세 사진은 표시하지 않는다
+- 너무 큰 파일(수 MB)은 가로 1200px 정도로 줄여 달라고 안내한다. 화면에서는 `next/image`가 크기를 최적화한다
 
 ## 4. 확인
 

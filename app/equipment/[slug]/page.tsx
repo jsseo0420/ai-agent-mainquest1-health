@@ -6,6 +6,8 @@ import BodyMap from "@/components/BodyMap";
 import EquipmentImage from "@/components/EquipmentImage";
 import FavoriteButton from "@/components/FavoriteButton";
 import PageHeader from "@/components/PageHeader";
+import PhotoCredit from "@/components/PhotoCredit";
+import PosturePhoto from "@/components/PosturePhoto";
 import { equipmentList, getEquipment } from "@/data/equipment";
 import { getMuscle, type MuscleId } from "@/data/muscles";
 
@@ -52,23 +54,15 @@ async function EquipmentDetail({
 
       <figure className="-mx-4">
         <EquipmentImage equipment={equipment} className="aspect-[4/3] w-full" priority />
-        <figcaption className="px-4 pt-1.5 text-right text-xs text-sub">
-          {equipment.imageCredit ? (
-            <>
-              사진:{" "}
-              <a
-                href={equipment.imageCredit.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                {equipment.imageCredit.author} / {equipment.imageCredit.source}
-              </a>
-            </>
-          ) : (
-            "기구 사진 준비 중 (자극 부위 그림으로 대신 보여드려요)"
-          )}
-        </figcaption>
+        {equipment.equipmentPhoto ? (
+          <div className="px-4">
+            <PhotoCredit credit={equipment.equipmentPhoto.credit} />
+          </div>
+        ) : (
+          <figcaption className="px-4 pt-1.5 text-right text-xs text-sub">
+            기구 사진 준비 중 (자극 부위 그림으로 대신 보여드려요)
+          </figcaption>
+        )}
       </figure>
 
       <div className="mt-4">
@@ -118,6 +112,7 @@ async function EquipmentDetail({
         <h3 id="steps-heading" className="text-lg font-bold">
           운동 자세
         </h3>
+        {equipment.posturePhoto && <PosturePhoto photo={equipment.posturePhoto} />}
         <ol className="mt-3 space-y-3">
           {equipment.steps.map((step, i) => (
             <li key={i} className="flex gap-3">

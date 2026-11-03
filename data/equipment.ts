@@ -6,14 +6,23 @@ export type ImageCredit = {
   url: string;
 };
 
+export type Photo = {
+  // public/ 아래 경로. 예: "/images/equipment/chest-press.jpg"
+  src: string;
+  alt: string;
+  // 직접 찍은 사진은 비워 두고, 외부 무료 이미지일 때만 출처를 적는다.
+  credit?: ImageCredit;
+};
+
 export type Equipment = {
   id: string;
   slug: string;
   nameKo: string;
   nameEn: string;
-  // 무료 이미지를 고르기 전까지는 비워 두고 화면에서 대체 그림을 보여준다.
-  imageUrl?: string;
-  imageCredit?: ImageCredit;
+  // 기구 사진. 없으면 화면에서 주동근을 강조한 인체 그림으로 대신 보여준다.
+  equipmentPhoto?: Photo;
+  // 운동하는 모습 사진. 운동 자세 설명 위에 보여준다.
+  posturePhoto?: Photo;
   primaryMuscles: MuscleId[];
   secondaryMuscles: MuscleId[];
   steps: string[];
@@ -27,6 +36,14 @@ export const equipmentList: Equipment[] = [
     slug: "chest-press",
     nameKo: "체스트 프레스 머신",
     nameEn: "Chest Press Machine",
+    equipmentPhoto: {
+      src: "/images/equipment/chest-press.jpg",
+      alt: "등받이와 앞으로 미는 손잡이가 달린 체스트 프레스 머신",
+    },
+    posturePhoto: {
+      src: "/images/posture/chest-press.jpg",
+      alt: "체스트 프레스 4단계: 시트 높이 맞추기, 등 붙이기, 손잡이 밀기, 천천히 되돌아오기",
+    },
     primaryMuscles: ["chest"],
     secondaryMuscles: ["front-delt", "triceps"],
     steps: [
@@ -45,6 +62,14 @@ export const equipmentList: Equipment[] = [
     slug: "pec-deck",
     nameKo: "펙덱 플라이 머신",
     nameEn: "Pec Deck Fly Machine",
+    equipmentPhoto: {
+      src: "/images/equipment/pec-deck.jpg",
+      alt: "양옆에 팔을 모으는 손잡이가 달린 펙덱 플라이 머신",
+    },
+    posturePhoto: {
+      src: "/images/posture/pec-deck.jpg",
+      alt: "펙덱 플라이 4단계: 시트 맞추기, 손잡이 잡기, 양팔을 몸 앞으로 모으기, 천천히 벌리기",
+    },
     primaryMuscles: ["chest"],
     secondaryMuscles: ["front-delt"],
     steps: [
@@ -63,6 +88,14 @@ export const equipmentList: Equipment[] = [
     slug: "flat-bench-press",
     nameKo: "플랫 벤치프레스",
     nameEn: "Flat Bench Press",
+    equipmentPhoto: {
+      src: "/images/equipment/flat-bench-press.jpg",
+      alt: "바벨이 거치대에 걸린 플랫 벤치프레스 벤치",
+    },
+    posturePhoto: {
+      src: "/images/posture/flat-bench-press.jpg",
+      alt: "벤치프레스 5단계: 바 아래 눕기, 바 잡기, 랙에서 들기, 명치까지 내리기, 밀어 올리기",
+    },
     primaryMuscles: ["chest"],
     secondaryMuscles: ["front-delt", "triceps"],
     steps: [
