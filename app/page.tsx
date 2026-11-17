@@ -34,8 +34,27 @@ export default function Home() {
           </div>
           <BodyMap view="front" primary={["chest", "abs"]} className="h-20 w-auto shrink-0" />
         </Link>
+        <Link
+          href="/routine"
+          className="flex items-center justify-between rounded-3xl border border-line bg-surface p-6 transition-colors hover:bg-accent-bg"
+        >
+          <div>
+            <p className="text-2xl font-bold">결과지로 루틴 추천</p>
+            <p className="mt-1 text-sm text-sub">체성분 결과지 사진으로 도감 운동 루틴을 받아요</p>
+          </div>
+          <SheetIcon />
+        </Link>
       </div>
     </main>
+  );
+}
+
+function SheetIcon() {
+  return (
+    <svg viewBox="0 0 48 48" className="h-14 w-14 shrink-0 text-accent-strong" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden>
+      <rect x="10" y="5" width="28" height="38" rx="4" />
+      <path d="M17 15h14M17 23h14M17 31h8" strokeLinecap="round" />
+    </svg>
   );
 }
 
