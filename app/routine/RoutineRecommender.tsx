@@ -294,6 +294,11 @@ function SexPicker({ sex, onChange }: { sex: Sex | null; onChange: (s: Sex) => v
   );
 }
 
+// 모델이 "12~15"나 "12~15회"를 섞어 보내므로, 단위를 한 번만 붙인다.
+function formatReps(reps: string): string {
+  return `${reps.trim().replace(/\s*회$/, "")}회`;
+}
+
 const LEVEL_STYLE: Record<Level, string> = {
   높음: "bg-orange-50 text-orange-700",
   낮음: "bg-sky-50 text-sky-700",
@@ -345,7 +350,7 @@ function RoutineResult({
                     >
                       <span className="font-semibold">{equipment.nameKo}</span>
                       <span className="shrink-0 text-sm text-accent-strong">
-                        {ex.sets}세트 × {ex.reps}회
+                        {ex.sets}세트 × {formatReps(ex.reps)}
                       </span>
                     </Link>
                     <p className="mt-1 px-1 text-sm text-sub">{ex.reason}</p>
