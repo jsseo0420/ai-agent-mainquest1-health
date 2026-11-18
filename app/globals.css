@@ -1,10 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent: #0f9f6e;
-  --color-accent-strong: #0b7a54;
-  --color-accent-soft: #a6e9cc;
-  --color-accent-bg: #e8f8f1;
+  /* MAPSCLE 브랜드: 검정 + 오렌지 레드 */
+  --color-accent: #ff4d2e; /* 버튼·강조 면. 위 글자는 on-accent(검정) */
+  --color-accent-hover: #ff6a4f;
+  --color-on-accent: #131313;
+  --color-accent-strong: #c93014; /* 흰 배경 위 글자·아이콘 (대비 4.5 이상) */
+  --color-accent-soft: #ffb8a8;
+  --color-accent-bg: #fff0ec;
+  --color-night: #131313; /* 온보딩·홈 배경. 일러스트 배경색과 같다 */
+  --color-night-2: #1f1f1f;
+  --color-night-line: #2e2e2e;
+  --color-night-sub: #9a9a9a;
   --color-body: #e4e2df;
   --color-muscle: #cdc9c4;
   --color-ink: #1c1b1a;

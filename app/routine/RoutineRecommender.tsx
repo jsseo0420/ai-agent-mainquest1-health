@@ -127,7 +127,7 @@ export default function RoutineRecommender() {
           <label
             htmlFor="sheet-photo"
             aria-disabled={busy !== null}
-            className={`mt-5 flex h-14 w-full cursor-pointer items-center justify-center rounded-2xl bg-accent font-semibold text-white hover:bg-accent-strong ${
+            className={`mt-5 flex h-14 w-full cursor-pointer items-center justify-center rounded-2xl bg-accent font-semibold text-on-accent hover:bg-accent-hover ${
               busy ? "pointer-events-none opacity-60" : ""
             }`}
           >
@@ -212,7 +212,7 @@ export default function RoutineRecommender() {
             type="button"
             disabled={busy !== null}
             onClick={() => void recommend()}
-            className="mt-5 h-14 w-full rounded-2xl bg-accent font-semibold text-white hover:bg-accent-strong disabled:opacity-60"
+            className="mt-5 h-14 w-full rounded-2xl bg-accent font-semibold text-on-accent hover:bg-accent-hover disabled:opacity-60"
           >
             {busy === "recommend" ? "루틴을 짜는 중이에요… (10~30초)" : "이 수치로 루틴 추천받기"}
           </button>
@@ -254,7 +254,7 @@ function Steps({ step }: { step: Step }) {
           key={item.id}
           aria-current={i === current ? "step" : undefined}
           className={`flex-1 rounded-full py-1.5 text-center ${
-            i === current ? "bg-accent font-semibold text-white" : i < current ? "bg-accent-bg text-accent-strong" : "bg-surface text-sub"
+            i === current ? "bg-accent font-semibold text-on-accent" : i < current ? "bg-accent-bg text-accent-strong" : "bg-surface text-sub"
           }`}
         >
           {i + 1}. {item.label}

@@ -22,7 +22,7 @@ export default function FavoriteList() {
         <p className="mt-1 text-sm text-sub">기구 상세 화면에서 ☆ 즐겨찾기를 눌러 보세요.</p>
         <Link
           href="/equipment"
-          className="mt-4 inline-flex h-11 items-center rounded-full bg-accent px-5 font-semibold text-white"
+          className="mt-4 inline-flex h-11 items-center rounded-full bg-accent px-5 font-semibold text-on-accent"
         >
           기구 둘러보기
         </Link>

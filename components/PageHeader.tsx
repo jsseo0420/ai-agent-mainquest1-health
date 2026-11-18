@@ -20,7 +20,7 @@ export default function PageHeader({ title, backHref, backLabel = "뒤로" }: Pr
           </svg>
         </Link>
       )}
-      <h1 className={`truncate text-lg font-bold ${backHref ? "" : "px-2"}`}>{title}</h1>
+      <h1 className={`truncate text-lg font-black italic tracking-tight ${backHref ? "" : "px-2"}`}>{title}</h1>
     </header>
   );
 }

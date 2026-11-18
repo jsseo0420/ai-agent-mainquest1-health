@@ -67,7 +67,7 @@ export default function MuscleFinder() {
             onClick={() => select(m.id)}
             className={`h-11 rounded-full px-4 text-sm font-medium transition-colors ${
               selected === m.id
-                ? "bg-accent text-white"
+                ? "bg-accent text-on-accent"
                 : "border border-line bg-white hover:bg-surface"
             }`}
           >

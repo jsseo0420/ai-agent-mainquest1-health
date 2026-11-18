@@ -76,7 +76,7 @@ async function EquipmentDetail({
         <FavoriteButton equipmentId={equipment.id} />
         <Link
           href={`/logs?equipment=${equipment.id}`}
-          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-accent font-semibold text-white hover:bg-accent-strong"
+          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-accent font-semibold text-on-accent hover:bg-accent-hover"
         >
           + 기록 추가
         </Link>
@@ -118,7 +118,7 @@ async function EquipmentDetail({
         <ol className="mt-3 space-y-3">
           {equipment.steps.map((step, i) => (
             <li key={i} className="flex gap-3">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-white">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-on-accent">
                 {i + 1}
               </span>
               <p className="pt-0.5 leading-relaxed">{step}</p>
@@ -166,7 +166,7 @@ function MuscleTags({
                 href={`/equipment?group=${muscle.group}`}
                 className={`inline-flex h-8 items-center rounded-full px-3 text-sm font-medium ${
                   strong
-                    ? "bg-accent text-white"
+                    ? "bg-accent text-on-accent"
                     : "bg-accent-soft/60 text-accent-strong"
                 }`}
               >

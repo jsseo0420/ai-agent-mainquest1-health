@@ -12,10 +12,15 @@ const tabs = [
 
 export default function BottomNav() {
   const pathname = usePathname();
+  // 온보딩은 전체 화면이라 메뉴를 숨기고, 검정 배경인 홈에서는 메뉴도 어둡게 맞춘다.
+  if (pathname === "/welcome") return null;
+  const dark = pathname === "/";
   return (
     <nav
       aria-label="주요 메뉴"
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white/95 backdrop-blur pb-[env(safe-area-inset-bottom)]"
+      className={`fixed inset-x-0 bottom-0 z-20 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur ${
+        dark ? "border-night-line bg-night/95" : "border-line bg-white/95"
+      }`}
     >
       <ul className="mx-auto flex max-w-xl">
         {tabs.map(({ href, label, icon: Icon, match }) => {
@@ -26,7 +31,13 @@ export default function BottomNav() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={`flex h-14 flex-col items-center justify-center gap-0.5 text-xs ${
-                  active ? "font-semibold text-accent-strong" : "text-sub"
+                  active
+                    ? dark
+                      ? "font-bold text-accent"
+                      : "font-bold text-accent-strong"
+                    : dark
+                      ? "text-night-sub"
+                      : "text-sub"
                 }`}
               >
                 <Icon />

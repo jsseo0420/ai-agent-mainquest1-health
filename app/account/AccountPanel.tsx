@@ -194,7 +194,7 @@ function AuthForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="h-12 w-full rounded-2xl bg-accent font-semibold text-white hover:bg-accent-strong disabled:opacity-60"
+          className="h-12 w-full rounded-2xl bg-accent font-semibold text-on-accent hover:bg-accent-hover disabled:opacity-60"
         >
           {submitting ? "잠시만요…" : mode === "signIn" ? "로그인" : "가입하기"}
         </button>

@@ -5,16 +5,17 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "나만의 헬스도감",
-    template: "%s | 나만의 헬스도감",
+    default: "MAPSCLE 맵슬 | 기구 앞에서 망설이지 마",
+    template: "%s | MAPSCLE",
   },
-  description: "헬스 기구별 운동 자세와 자극 부위, 부위별 운동 기구를 쉽게 찾아보는 헬스 입문자용 도감",
+  applicationName: "MAPSCLE",
+  description: "헬스 입문자를 위한 기구·근육 지도. 기구별 운동 자세와 자극 부위, 부위별 운동 기구, 체성분 결과지 루틴 추천까지.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#ffffff",
+  themeColor: "#131313",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

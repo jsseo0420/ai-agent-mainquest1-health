@@ -7,7 +7,7 @@ export default function EquipmentCard({ equipment }: { equipment: Equipment }) {
   return (
     <Link
       href={`/equipment/${equipment.slug}`}
-      className="flex items-center gap-3 rounded-2xl border border-line bg-white p-3 transition-colors hover:border-accent-soft active:bg-surface"
+      className="flex items-center gap-3 rounded-xl border border-line bg-white p-3 transition-colors hover:border-accent-soft active:bg-surface"
     >
       <EquipmentImage
         equipment={equipment}

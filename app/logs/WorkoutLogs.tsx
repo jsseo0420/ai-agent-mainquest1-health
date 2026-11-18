@@ -53,7 +53,7 @@ export default function WorkoutLogs() {
         <button
           type="button"
           onClick={() => setFormOpen(true)}
-          className="mt-4 h-12 w-full rounded-2xl bg-accent font-semibold text-white hover:bg-accent-strong"
+          className="mt-4 h-12 w-full rounded-2xl bg-accent font-semibold text-on-accent hover:bg-accent-hover"
         >
           + 운동 기록 추가
         </button>
@@ -230,7 +230,7 @@ function LogForm({
         <button
           type="submit"
           disabled={saving}
-          className="h-12 flex-[2] rounded-xl bg-accent font-semibold text-white hover:bg-accent-strong disabled:opacity-60"
+          className="h-12 flex-[2] rounded-xl bg-accent font-semibold text-on-accent hover:bg-accent-hover disabled:opacity-60"
         >
           {saving ? "저장 중…" : "저장"}
         </button>

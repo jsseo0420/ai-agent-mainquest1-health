@@ -1,71 +1,105 @@
 import Link from "next/link";
-import SearchForm from "@/components/SearchForm";
 import BodyMap from "@/components/BodyMap";
+import Logo from "@/components/Logo";
+import SearchForm from "@/components/SearchForm";
+import { equipmentList } from "@/data/equipment";
+import { muscles } from "@/data/muscles";
+import OnboardingGate from "@/components/OnboardingGate";
 
 export default function Home() {
   return (
-    <main className="pt-8">
-      <p className="text-sm font-semibold text-accent-strong">헬스 입문자를 위한</p>
-      <h1 className="mt-1 text-3xl font-extrabold tracking-tight">나만의 헬스도감</h1>
-      <p className="mt-2 text-sub">기구 사용법도, 부위별 기구도 바로 찾아보세요.</p>
+    <main className="-mx-4 -mb-24 min-h-dvh bg-night px-4 pb-28 text-white">
+      <OnboardingGate />
 
-      <div className="mt-6">
-        <SearchForm />
+      <header className="flex h-14 items-center">
+        <Logo tone="dark" />
+      </header>
+
+      <section className="pt-6">
+        <p className="text-sm font-bold italic text-accent">헬스 입문자를 위한 기구·근육 지도</p>
+        <h1 className="mt-2 text-[2.5rem] font-black italic leading-[1.05] tracking-tight">
+          기구 앞에서
+          <br />
+          <span className="text-accent">망설이지 마.</span>
+        </h1>
+        <dl className="mt-5 flex gap-6 text-night-sub">
+          <div>
+            <dt className="text-xs">운동</dt>
+            <dd className="text-2xl font-black italic text-white">{equipmentList.length}</dd>
+          </div>
+          <div>
+            <dt className="text-xs">부위</dt>
+            <dd className="text-2xl font-black italic text-white">{muscles.length}</dd>
+          </div>
+          <div>
+            <dt className="text-xs">루틴 추천</dt>
+            <dd className="text-2xl font-black italic text-white">주 3회</dd>
+          </div>
+        </dl>
+      </section>
+
+      <div className="mt-7">
+        <SearchForm tone="dark" />
       </div>
 
-      <div className="mt-6 grid gap-3">
+      <nav aria-label="찾기 방식" className="mt-4 grid gap-2.5">
         <Link
           href="/equipment"
-          className="group flex items-center justify-between rounded-3xl bg-accent p-6 text-white transition-colors hover:bg-accent-strong"
+          className="flex items-center justify-between gap-3 rounded-lg bg-accent p-5 text-on-accent transition-colors hover:bg-accent-hover"
         >
           <div>
-            <p className="text-2xl font-bold">기구로 찾기</p>
-            <p className="mt-1 text-sm text-white/85">기구 앞에서 사용법을 바로 확인해요</p>
+            <p className="text-2xl font-black italic">기구로 찾기</p>
+            <p className="mt-0.5 text-sm font-medium text-on-accent/75">기구 앞에서 사용법을 바로 확인해요</p>
           </div>
-          <DumbbellIcon />
+          <ArrowIcon />
         </Link>
         <Link
           href="/muscles"
-          className="flex items-center justify-between rounded-3xl border-2 border-accent bg-accent-bg p-6 transition-colors hover:bg-accent-soft/50"
+          className="flex items-center justify-between gap-3 rounded-lg border border-night-line bg-night-2 p-5 transition-colors hover:border-accent"
         >
-          <div>
-            <p className="text-2xl font-bold text-accent-strong">부위로 찾기</p>
-            <p className="mt-1 text-sm text-sub">운동하고 싶은 근육에 맞는 기구를 찾아요</p>
+          <div className="min-w-0">
+            <p className="text-xl font-black italic">부위로 찾기</p>
+            <p className="mt-0.5 text-sm text-night-sub">근육 지도를 누르면 맞는 기구가 나와요</p>
           </div>
-          <BodyMap view="front" primary={["chest", "abs"]} className="h-20 w-auto shrink-0" />
+          <BodyMap view="front" primary={["chest", "abs"]} className="h-16 w-auto shrink-0" />
         </Link>
         <Link
           href="/routine"
-          className="flex items-center justify-between rounded-3xl border border-line bg-surface p-6 transition-colors hover:bg-accent-bg"
+          className="flex items-center justify-between gap-3 rounded-lg border border-night-line bg-night-2 p-5 transition-colors hover:border-accent"
         >
-          <div>
-            <p className="text-2xl font-bold">결과지로 루틴 추천</p>
-            <p className="mt-1 text-sm text-sub">체성분 결과지 사진으로 도감 운동 루틴을 받아요</p>
+          <div className="min-w-0">
+            <p className="text-xl font-black italic">결과지로 루틴 추천</p>
+            <p className="mt-0.5 text-sm text-night-sub">체성분 결과지 사진으로 주 3회 루틴을 받아요</p>
           </div>
           <SheetIcon />
         </Link>
-      </div>
+      </nav>
+
+      <p className="mt-8 text-center">
+        <Link
+          href="/welcome"
+          className="inline-flex h-11 items-center px-3 text-sm text-night-sub underline-offset-4 hover:text-white hover:underline"
+        >
+          MAPSCLE 소개 다시 보기
+        </Link>
+      </p>
     </main>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-8 w-8 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
+      <path d="M5 12h14m-6-6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
 function SheetIcon() {
   return (
-    <svg viewBox="0 0 48 48" className="h-14 w-14 shrink-0 text-accent-strong" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden>
-      <rect x="10" y="5" width="28" height="38" rx="4" />
+    <svg viewBox="0 0 48 48" className="h-14 w-14 shrink-0 text-accent" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden>
+      <rect x="10" y="5" width="28" height="38" rx="3" />
       <path d="M17 15h14M17 23h14M17 31h8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function DumbbellIcon() {
-  return (
-    <svg viewBox="0 0 48 48" className="h-14 w-14 shrink-0" fill="currentColor" aria-hidden>
-      <rect x="4" y="18" width="6" height="12" rx="2" />
-      <rect x="10" y="13" width="7" height="22" rx="2" />
-      <rect x="17" y="22" width="14" height="4" />
-      <rect x="31" y="13" width="7" height="22" rx="2" />
-      <rect x="38" y="18" width="6" height="12" rx="2" />
     </svg>
   );
 }

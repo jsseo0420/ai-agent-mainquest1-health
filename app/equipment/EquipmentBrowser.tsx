@@ -141,7 +141,7 @@ function FilterChip({
         active
           ? small
             ? "bg-ink text-white"
-            : "bg-accent text-white"
+            : "bg-accent text-on-accent"
           : "border border-line bg-white text-ink hover:bg-surface"
       }`}
     >

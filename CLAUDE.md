@@ -1,4 +1,4 @@
-# 나만의 헬스도감
+# MAPSCLE 맵슬 (구 나만의 헬스도감)
 
 헬스 입문자가 기구별 운동 자세·자극 부위를 찾고, 부위별로 맞는 기구를 찾는 모바일 웹 도감.
 기획과 요구사항은 [PRD.md](PRD.md)가 기준이다. 기능을 바꾸면 PRD도 함께 고친다.
@@ -13,6 +13,8 @@
 
 ## 구조
 
+- `app/welcome/`: 첫 방문 온보딩. 처음 온 사용자인지는 `lib/storage/onboarding.ts`의 인라인 스크립트(`components/OnboardingGate.tsx`)로 홈이 그려지기 전에 확인한다
+- `components/Logo.tsx`: MAPSCLE 로고. 온보딩·홈은 `bg-night`(검정), 나머지는 흰 배경
 - `app/`: 화면. 서버 컴포넌트가 기본이고, 상태·브라우저 API가 필요한 부분만 `"use client"` 파일로 분리한다 (예: `EquipmentBrowser.tsx`, `MuscleFinder.tsx`)
 - `components/`: 공통 컴포넌트. 인체 그림은 `BodyMap.tsx`
 - `data/equipment.ts`, `data/muscles.ts`: 기구·부위 데이터. 기구는 DB가 아니라 이 파일에 있다
@@ -28,7 +30,7 @@
 - 화면 컴포넌트는 Supabase나 `localStorage`를 직접 호출하지 않고 `lib/storage/`의 함수와 훅만 쓴다
 - 로그인과 데이터 조회는 브라우저에서 한다. 서버에서 세션(`cookies()`)을 읽으면 Cache Components 때문에 정적 페이지가 깨지므로, 꼭 필요하면 먼저 `node_modules/next/dist/docs/01-app/02-guides/authentication-with-cache-components.md`를 읽는다
 - `params`, `searchParams`, `useSearchParams`를 쓰는 부분은 `<Suspense>` 안에 둔다
-- 색상은 `app/globals.css`의 테마 토큰(`accent`, `sub`, `line`, `surface` 등)을 쓴다
+- 색상은 `app/globals.css`의 테마 토큰(`accent`, `sub`, `line`, `surface`, `night` 등)을 쓴다. `bg-accent` 위 글자는 `text-on-accent`, 흰 배경 위 강조 글자는 `text-accent-strong`
 - 모바일 우선: 375px 너비에서 가로 스크롤이 없어야 하고, 터치 영역은 최소 44px (`h-11` 이상)
 
 ## 보안 규칙

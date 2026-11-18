@@ -1,6 +1,6 @@
 # 메인퀘스트1
 
-나만의 헬스도감 만들고 배포하기
+MAPSCLE 맵슬 (구 나만의 헬스도감) 만들고 배포하기
 
 **서비스 주소: https://ai-agent-mainquest1-health.vercel.app**
 
