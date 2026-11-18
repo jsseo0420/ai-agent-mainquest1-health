@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "부위로 찾기" };
 export default function MusclesPage() {
   return (
     <main>
-      <PageHeader title="부위로 찾기" backHref="/" backLabel="홈으로" />
+      <PageHeader title="부위로 찾기" backHref="/" backLabel="홈으로" tone="dark" />
       <MuscleFinder />
     </main>
   );

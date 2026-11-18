@@ -63,9 +63,9 @@ const backShapes: Shape[] = [
   { muscle: "calves", node: <ellipse cx="86" cy="328" rx="9" ry="22" /> },
 ];
 
-function Silhouette() {
+function Silhouette({ bodyClass }: { bodyClass: string }) {
   return (
-    <g className="fill-body">
+    <g className={bodyClass}>
       <path d="M64 70 Q100 62 136 70 L140 120 Q134 160 133 205 L67 205 Q66 160 60 120 Z" />
       <path d="M60 72 Q46 76 44 96 L40 150 L54 152 L63 110 Z" />
       <path d="M40 150 L35 210 L47 212 L54 152 Z" />
@@ -85,6 +85,8 @@ type Props = {
   secondary?: MuscleId[];
   onSelect?: (muscle: MuscleId) => void;
   className?: string;
+  // dark: 검정 배경 위에서 쓰는 어두운 몸 색
+  tone?: "light" | "dark";
 };
 
 export default function BodyMap({
@@ -93,13 +95,15 @@ export default function BodyMap({
   secondary = [],
   onSelect,
   className,
+  tone = "light",
 }: Props) {
+  const bodyClass = tone === "dark" ? "fill-body-dark" : "fill-body";
   const shapes = view === "front" ? frontShapes : backShapes;
 
   function fillClass(muscle: MuscleId) {
     if (primary.includes(muscle)) return "fill-accent";
     if (secondary.includes(muscle)) return "fill-accent-soft";
-    return "fill-muscle";
+    return tone === "dark" ? "fill-muscle-dark" : "fill-muscle";
   }
 
   function renderShapes(mirrored: boolean) {
@@ -143,11 +147,11 @@ export default function BodyMap({
       role={onSelect ? "group" : "img"}
       aria-label={view === "front" ? "인체 앞모습" : "인체 뒷모습"}
     >
-      <circle cx="100" cy="32" r="20" className="fill-body" />
-      <rect x="92" y="48" width="16" height="20" className="fill-body" />
-      <Silhouette />
+      <circle cx="100" cy="32" r="20" className={bodyClass} />
+      <rect x="92" y="48" width="16" height="20" className={bodyClass} />
+      <Silhouette bodyClass={bodyClass} />
       <g transform={MIRROR}>
-        <Silhouette />
+        <Silhouette bodyClass={bodyClass} />
       </g>
       {renderShapes(false)}
       <g transform={MIRROR}>{renderShapes(true)}</g>
