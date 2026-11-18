@@ -13,7 +13,8 @@
 
 ## 구조
 
-- `app/welcome/`: 첫 방문 온보딩. 처음 온 사용자인지는 `lib/storage/onboarding.ts`의 인라인 스크립트(`components/OnboardingGate.tsx`)로 홈이 그려지기 전에 확인한다
+- `components/Splash.tsx`: 앱 시작 화면. 레이아웃에서 그리며, 함께 넣는 인라인 스크립트(`lib/storage/onboarding.ts`의 `startupScript`)가 화면이 그려지기 전에 ① 첫 방문자를 `/welcome`으로 보내고 ② 세션 첫 화면이면 스플래시를 띄운다
+- `app/welcome/`: 첫 방문 온보딩
 - `components/Logo.tsx`: MAPSCLE 로고. 온보딩·홈은 `bg-night`(검정), 나머지는 흰 배경
 - `app/`: 화면. 서버 컴포넌트가 기본이고, 상태·브라우저 API가 필요한 부분만 `"use client"` 파일로 분리한다 (예: `EquipmentBrowser.tsx`, `MuscleFinder.tsx`)
 - `components/`: 공통 컴포넌트. 인체 그림은 `BodyMap.tsx`

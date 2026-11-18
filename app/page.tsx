@@ -4,12 +4,10 @@ import Logo from "@/components/Logo";
 import SearchForm from "@/components/SearchForm";
 import { equipmentList } from "@/data/equipment";
 import { muscles } from "@/data/muscles";
-import OnboardingGate from "@/components/OnboardingGate";
 
 export default function Home() {
   return (
     <main className="-mx-4 -mb-24 min-h-dvh bg-night px-4 pb-28 text-white">
-      <OnboardingGate />
 
       <header className="flex h-14 items-center">
         <Logo tone="dark" />

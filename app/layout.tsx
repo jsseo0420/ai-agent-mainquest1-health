@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import AuthSync from "@/components/AuthSync";
 import BottomNav from "@/components/BottomNav";
+import Splash from "@/components/Splash";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full">
+        <Splash />
         <div className="mx-auto min-h-full max-w-xl px-4 pb-24">{children}</div>
         <BottomNav />
         <AuthSync />
