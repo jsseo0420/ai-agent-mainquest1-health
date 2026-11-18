@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Logo from "@/components/Logo";
+import { SPLASH_DONE_EVENT } from "@/components/Splash";
 import { markOnboarded } from "@/lib/storage/onboarding";
 
 const slides = [
@@ -30,8 +31,23 @@ const slides = [
 export default function Onboarding() {
   const router = useRouter();
   const trackRef = useRef<HTMLDivElement>(null);
-  const [index, setIndex] = useState(0);
+  // 스크롤 위치를 장 단위로 나타낸 값 (0 ~ 2, 넘기는 중에는 소수). 넘길 때 그림 크기·투명도에 쓴다.
+  const [pos, setPos] = useState(0);
+  // 등장 애니메이션 시작 여부. 시작 화면(스플래시)이 떠 있으면 사라진 뒤에 시작한다.
+  const [ready, setReady] = useState(false);
+  const index = Math.round(pos);
   const last = index === slides.length - 1;
+
+  useEffect(() => {
+    if (!window.__mapscleSplash) {
+      // 첫 프레임은 숨긴 상태로 그린 뒤 다음 프레임에 등장시켜야 전환 효과가 보인다.
+      const id = requestAnimationFrame(() => setReady(true));
+      return () => cancelAnimationFrame(id);
+    }
+    const start = () => setReady(true);
+    window.addEventListener(SPLASH_DONE_EVENT, start, { once: true });
+    return () => window.removeEventListener(SPLASH_DONE_EVENT, start);
+  }, []);
 
   function goTo(i: number) {
     const track = trackRef.current;
@@ -57,36 +73,66 @@ export default function Onboarding() {
         </button>
       </header>
 
+      {/* 손가락으로 옆으로 밀면 한 장씩 넘어간다 (CSS scroll-snap). 키보드는 ←/→ */}
       <div
         ref={trackRef}
+        tabIndex={0}
         onScroll={(e) => {
           const t = e.currentTarget;
-          setIndex(Math.round(t.scrollLeft / t.clientWidth));
+          setPos(t.scrollLeft / t.clientWidth);
         }}
-        className="flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden [scrollbar-width:none]"
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight" && index < slides.length - 1) goTo(index + 1);
+          if (e.key === "ArrowLeft" && index > 0) goTo(index - 1);
+        }}
+        className="flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden outline-none [scrollbar-width:none]"
         aria-roledescription="carousel"
         aria-label="MAPSCLE 소개"
       >
-        {slides.map((s, i) => (
-          <section
-            key={s.image}
-            className="flex w-full shrink-0 snap-center flex-col items-center overflow-y-auto px-6"
-            aria-roledescription="slide"
-            aria-label={`${slides.length}장 중 ${i + 1}장`}
-            aria-hidden={i !== index}
-          >
-            <div className="relative aspect-square w-full max-w-[min(100%,46dvh)]">
-              <Image src={s.image} alt={s.alt} fill sizes="(max-width: 576px) 100vw, 480px" priority={i === 0} />
-            </div>
-            <div className="w-full max-w-md">
-              <p className="text-sm font-bold italic text-accent">0{i + 1}</p>
-              <h1 className="mt-1 whitespace-pre-line text-3xl font-black italic leading-tight tracking-tight">
-                {s.title}
-              </h1>
-              <p className="mt-3 leading-relaxed text-night-sub">{s.body}</p>
-            </div>
-          </section>
-        ))}
+        {slides.map((s, i) => {
+          const active = ready && i === index;
+          // 넘기는 중: 가운데서 멀어질수록 그림이 작아지고 흐려지며, 문구는 반대로 조금 더 밀려난다.
+          const d = Math.min(Math.abs(pos - i), 1);
+          const dir = Math.sign(i - pos);
+          return (
+            <section
+              key={s.image}
+              className="flex w-full shrink-0 snap-center snap-always flex-col items-center overflow-y-auto px-6"
+              aria-roledescription="slide"
+              aria-label={`${slides.length}장 중 ${i + 1}장`}
+              aria-hidden={i !== index}
+            >
+              <div
+                className="-mx-4 w-[calc(100%+2rem)] max-w-[min(calc(100%+2rem),58dvh)] will-change-transform motion-reduce:!transform-none"
+                style={{ transform: `scale(${1 - d * 0.15}) rotate(${dir * d * 4}deg)`, opacity: 1 - d * 0.6 }}
+              >
+                <div
+                  className={`relative aspect-square w-full transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none ${
+                    active ? "scale-100 opacity-100" : "scale-95 opacity-0"
+                  }`}
+                >
+                  <Image src={s.image} alt={s.alt} fill sizes="(max-width: 576px) 100vw, 560px" priority={i === 0} />
+                </div>
+              </div>
+              <div
+                className="w-full max-w-md will-change-transform motion-reduce:!transform-none"
+                style={{ transform: `translateX(${dir * d * 40}px)` }}
+              >
+                <div
+                  className={`transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none ${
+                    active ? "translate-y-0 opacity-100 delay-500" : "translate-y-8 opacity-0"
+                  }`}
+                >
+                  <p className="text-sm font-bold italic text-accent">0{i + 1}</p>
+                  <h1 className="mt-1 whitespace-pre-line text-3xl font-black italic leading-tight tracking-tight">
+                    {s.title}
+                  </h1>
+                  <p className="mt-3 leading-relaxed text-night-sub">{s.body}</p>
+                </div>
+              </div>
+            </section>
+          );
+        })}
       </div>
 
       <footer className="mx-auto w-full max-w-xl shrink-0 px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-4">
@@ -94,7 +140,7 @@ export default function Onboarding() {
           {slides.map((s, i) => (
             <span
               key={s.image}
-              className={`h-1.5 rounded-full transition-all ${i === index ? "w-6 bg-accent" : "w-1.5 bg-night-line"}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${i === index ? "w-6 bg-accent" : "w-1.5 bg-night-line"}`}
             />
           ))}
         </div>

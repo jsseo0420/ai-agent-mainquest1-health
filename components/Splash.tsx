@@ -7,6 +7,7 @@ import { LogoMark } from "./Logo";
 const SPLASH_ID = "app-splash";
 const SHOW_MS = 1000;
 const FADE_MS = 300;
+export const SPLASH_DONE_EVENT = "mapscle:splash-done";
 
 declare global {
   interface Window {
@@ -27,6 +28,8 @@ export default function Splash() {
     const hide = window.setTimeout(() => {
       window.__mapscleSplash = false;
       setVisible(false);
+      // 온보딩처럼 등장 애니메이션이 있는 화면은 이 신호를 받고 시작한다.
+      window.dispatchEvent(new Event(SPLASH_DONE_EVENT));
     }, SHOW_MS + FADE_MS);
     return () => {
       window.clearTimeout(fade);
