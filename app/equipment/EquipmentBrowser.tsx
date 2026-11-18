@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import EquipmentCard from "@/components/EquipmentCard";
+import EquipmentTile from "@/components/EquipmentTile";
 import { SearchIcon } from "@/components/SearchForm";
 import {
   equipmentList,
@@ -42,7 +42,7 @@ export default function EquipmentBrowser() {
 
   return (
     <>
-      <div className="sticky top-14 z-10 -mx-4 bg-white/95 px-4 pb-3 pt-3 backdrop-blur">
+      <div className="sticky top-14 z-10 -mx-4 bg-night px-4 pb-3 pt-1">
         <div className="relative">
           <label htmlFor="equipment-search" className="sr-only">
             기구 이름 검색
@@ -58,7 +58,7 @@ export default function EquipmentBrowser() {
               syncUrl(e.target.value, group);
             }}
             placeholder="기구 이름 검색"
-            className="h-12 w-full rounded-2xl border border-line bg-surface pl-11 pr-4 text-base outline-none focus:border-accent focus:bg-white"
+            className="h-12 w-full rounded-lg border border-night-line bg-night-2 pl-11 pr-4 text-base text-white outline-none placeholder:text-night-sub focus:border-accent"
           />
         </div>
         <div
@@ -70,49 +70,39 @@ export default function EquipmentBrowser() {
             전체
           </FilterChip>
           {muscleGroups.map((g) => (
-            <FilterChip
-              key={g.id}
-              active={group === g.id}
-              onClick={() => syncUrl(query, g.id)}
-            >
+            <FilterChip key={g.id} active={group === g.id} onClick={() => syncUrl(query, g.id)}>
               {g.name}
-            </FilterChip>
-          ))}
-        </div>
-        <div
-          role="group"
-          aria-label="종류 필터"
-          className="-mx-4 mt-2 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]"
-        >
-          <FilterChip active={type === null} onClick={() => syncUrl(query, group, null)} small>
-            모든 종류
-          </FilterChip>
-          {equipmentTypes.map((t) => (
-            <FilterChip
-              key={t.id}
-              active={type === t.id}
-              onClick={() => syncUrl(query, group, t.id)}
-              small
-            >
-              {t.name}
             </FilterChip>
           ))}
         </div>
       </div>
 
-      <p className="mb-2 mt-1 text-sm text-sub" aria-live="polite">
-        {results.length}개 기구
-      </p>
+      <div className="-mx-4 flex items-center border-b border-line px-4">
+        <div role="group" aria-label="종류 필터" className="flex gap-4 overflow-x-auto [scrollbar-width:none]">
+          <TypeTab active={type === null} onClick={() => syncUrl(query, group, null)}>
+            전체
+          </TypeTab>
+          {equipmentTypes.map((t) => (
+            <TypeTab key={t.id} active={type === t.id} onClick={() => syncUrl(query, group, t.id)}>
+              {t.name}
+            </TypeTab>
+          ))}
+        </div>
+        <p className="ml-auto shrink-0 pl-3 text-sm text-sub" aria-live="polite">
+          {results.length}개
+        </p>
+      </div>
+
       {results.length > 0 ? (
-        <ul className="grid gap-2">
+        <ul className="mt-3 grid grid-cols-2 gap-2.5">
           {results.map((e) => (
             <li key={e.id}>
-              <EquipmentCard equipment={e} />
+              <EquipmentTile equipment={e} />
             </li>
           ))}
         </ul>
       ) : (
-        <div className="rounded-2xl bg-surface px-4 py-12 text-center">
+        <div className="mt-3 rounded-lg bg-surface px-4 py-12 text-center">
           <p className="font-semibold">검색 결과가 없어요</p>
           <p className="mt-1 text-sm text-sub">다른 이름으로 검색하거나 필터를 바꿔 보세요.</p>
         </div>
@@ -121,28 +111,47 @@ export default function EquipmentBrowser() {
   );
 }
 
+// 검정 영역의 부위 칩
 function FilterChip({
   active,
   onClick,
   children,
-  small = false,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
-  small?: boolean;
 }) {
   return (
     <button
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`h-11 shrink-0 rounded-full px-4 text-sm font-medium transition-colors ${
-        active
-          ? small
-            ? "bg-ink text-white"
-            : "bg-accent text-on-accent"
-          : "border border-line bg-white text-ink hover:bg-surface"
+      className={`h-11 shrink-0 rounded-full px-4 text-sm font-bold transition-colors ${
+        active ? "bg-accent text-on-accent" : "border border-night-line text-white hover:border-accent"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+// 흰 영역의 종류 탭 (밑줄로 선택 표시)
+function TypeTab({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={`-mb-px h-11 shrink-0 border-b-2 text-sm transition-colors ${
+        active ? "border-ink font-bold text-ink" : "border-transparent text-sub hover:text-ink"
       }`}
     >
       {children}
