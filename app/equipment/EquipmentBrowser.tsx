@@ -4,7 +4,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import EquipmentCard from "@/components/EquipmentCard";
 import { SearchIcon } from "@/components/SearchForm";
-import { equipmentList, filterEquipment } from "@/data/equipment";
+import {
+  equipmentList,
+  equipmentTypes,
+  filterEquipment,
+  isEquipmentType,
+  type EquipmentType,
+} from "@/data/equipment";
 import { isMuscleGroupId, muscleGroups, type MuscleGroupId } from "@/data/muscles";
 
 export default function EquipmentBrowser() {
@@ -14,15 +20,22 @@ export default function EquipmentBrowser() {
 
   const groupParam = searchParams.get("group") ?? "";
   const group: MuscleGroupId | null = isMuscleGroupId(groupParam) ? groupParam : null;
+  const typeParam = searchParams.get("type") ?? "";
+  const type: EquipmentType | null = isEquipmentType(typeParam) ? typeParam : null;
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
 
-  const results = filterEquipment(equipmentList, query, group);
+  const results = filterEquipment(equipmentList, query, group, type);
 
   // 검색어와 필터를 주소에 남겨 뒤로 가기·공유 시에도 유지한다.
-  function syncUrl(nextQuery: string, nextGroup: MuscleGroupId | null) {
+  function syncUrl(
+    nextQuery: string,
+    nextGroup: MuscleGroupId | null,
+    nextType: EquipmentType | null = type,
+  ) {
     const params = new URLSearchParams();
     if (nextQuery) params.set("q", nextQuery);
     if (nextGroup) params.set("group", nextGroup);
+    if (nextType) params.set("type", nextType);
     const qs = params.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
@@ -66,6 +79,25 @@ export default function EquipmentBrowser() {
             </FilterChip>
           ))}
         </div>
+        <div
+          role="group"
+          aria-label="종류 필터"
+          className="-mx-4 mt-2 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]"
+        >
+          <FilterChip active={type === null} onClick={() => syncUrl(query, group, null)} small>
+            모든 종류
+          </FilterChip>
+          {equipmentTypes.map((t) => (
+            <FilterChip
+              key={t.id}
+              active={type === t.id}
+              onClick={() => syncUrl(query, group, t.id)}
+              small
+            >
+              {t.name}
+            </FilterChip>
+          ))}
+        </div>
       </div>
 
       <p className="mb-2 mt-1 text-sm text-sub" aria-live="polite">
@@ -93,10 +125,12 @@ function FilterChip({
   active,
   onClick,
   children,
+  small = false,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  small?: boolean;
 }) {
   return (
     <button
@@ -104,7 +138,11 @@ function FilterChip({
       aria-pressed={active}
       onClick={onClick}
       className={`h-11 shrink-0 rounded-full px-4 text-sm font-medium transition-colors ${
-        active ? "bg-accent text-white" : "border border-line bg-white text-ink hover:bg-surface"
+        active
+          ? small
+            ? "bg-ink text-white"
+            : "bg-accent text-white"
+          : "border border-line bg-white text-ink hover:bg-surface"
       }`}
     >
       {children}

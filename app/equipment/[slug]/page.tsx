@@ -8,7 +8,7 @@ import FavoriteButton from "@/components/FavoriteButton";
 import PageHeader from "@/components/PageHeader";
 import PhotoCredit from "@/components/PhotoCredit";
 import PosturePhoto from "@/components/PosturePhoto";
-import { equipmentList, getEquipment } from "@/data/equipment";
+import { equipmentList, equipmentTypeName, getEquipment } from "@/data/equipment";
 import { getMuscle, type MuscleId } from "@/data/muscles";
 
 export function generateStaticParams() {
@@ -67,7 +67,9 @@ async function EquipmentDetail({
 
       <div className="mt-4">
         <h2 className="text-2xl font-extrabold">{equipment.nameKo}</h2>
-        <p className="text-sub">{equipment.nameEn}</p>
+        <p className="text-sub">
+          {equipment.nameEn} · {equipmentTypeName(equipment.type)}
+        </p>
       </div>
 
       <div className="mt-4 flex gap-2">

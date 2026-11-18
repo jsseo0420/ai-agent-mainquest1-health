@@ -14,11 +14,29 @@ export type Photo = {
   credit?: ImageCredit;
 };
 
+// 운동 종류. 케이블·스미스 머신처럼 궤도나 도르래가 정해진 기구는 머신으로 본다.
+export type EquipmentType = "machine" | "free-weight" | "bodyweight";
+
+export const equipmentTypes: { id: EquipmentType; name: string }[] = [
+  { id: "machine", name: "머신" },
+  { id: "free-weight", name: "프리웨이트" },
+  { id: "bodyweight", name: "맨몸" },
+];
+
+export function isEquipmentType(value: string): value is EquipmentType {
+  return equipmentTypes.some((t) => t.id === value);
+}
+
+export function equipmentTypeName(type: EquipmentType): string {
+  return equipmentTypes.find((t) => t.id === type)!.name;
+}
+
 export type Equipment = {
   id: string;
   slug: string;
   nameKo: string;
   nameEn: string;
+  type: EquipmentType;
   // 기구 사진. 없으면 화면에서 주동근을 강조한 인체 그림으로 대신 보여준다.
   equipmentPhoto?: Photo;
   // 운동하는 모습 사진. 운동 자세 설명 위에 보여준다.
@@ -36,6 +54,7 @@ export const equipmentList: Equipment[] = [
     slug: "chest-press",
     nameKo: "체스트 프레스 머신",
     nameEn: "Chest Press Machine",
+    type: "machine",
     equipmentPhoto: {
       src: "/images/equipment/chest-press.jpg",
       alt: "등받이와 앞으로 미는 손잡이가 달린 체스트 프레스 머신",
@@ -62,6 +81,7 @@ export const equipmentList: Equipment[] = [
     slug: "pec-deck",
     nameKo: "펙덱 플라이 머신",
     nameEn: "Pec Deck Fly Machine",
+    type: "machine",
     equipmentPhoto: {
       src: "/images/equipment/pec-deck.jpg",
       alt: "양옆에 팔을 모으는 손잡이가 달린 펙덱 플라이 머신",
@@ -88,6 +108,7 @@ export const equipmentList: Equipment[] = [
     slug: "flat-bench-press",
     nameKo: "플랫 벤치프레스",
     nameEn: "Flat Bench Press",
+    type: "free-weight",
     equipmentPhoto: {
       src: "/images/equipment/flat-bench-press.jpg",
       alt: "바벨이 거치대에 걸린 플랫 벤치프레스 벤치",
@@ -116,6 +137,7 @@ export const equipmentList: Equipment[] = [
     slug: "incline-bench-press",
     nameKo: "인클라인 벤치프레스",
     nameEn: "Incline Bench Press",
+    type: "free-weight",
     primaryMuscles: ["chest"],
     secondaryMuscles: ["front-delt", "triceps"],
     steps: [
@@ -130,10 +152,32 @@ export const equipmentList: Equipment[] = [
     ],
   },
   {
+    id: "incline-dumbbell-press",
+    slug: "incline-dumbbell-press",
+    nameKo: "인클라인 덤벨 프레스",
+    nameEn: "Incline Dumbbell Press",
+    type: "free-weight",
+    primaryMuscles: ["chest"],
+    secondaryMuscles: ["front-delt", "triceps"],
+    steps: [
+      "벤치 각도를 30~45도로 맞추고 덤벨을 허벅지 위에 세운 채 앉는다.",
+      "등을 기대며 무릎으로 덤벨을 밀어 올려 가슴 옆에 둔다.",
+      "견갑골을 모으고 숨을 내쉬며 덤벨을 윗가슴 위로 밀어 올린다.",
+      "숨을 들이마시며 팔꿈치가 어깨보다 조금 낮아질 때까지 천천히 내린다.",
+      "끝나면 덤벨을 가슴 쪽으로 가져와 허벅지 위로 내린 뒤 일어난다.",
+    ],
+    cautions: [
+      "덤벨을 몸 옆으로 던지듯 내려놓지 않는다.",
+      "팔꿈치를 몸통과 90도로 벌리지 말고 45~60도 정도로 둔다.",
+      "바벨보다 균형 잡기가 어려우니 가벼운 무게로 시작한다.",
+    ],
+  },
+  {
     id: "cable-crossover",
     slug: "cable-crossover",
     nameKo: "케이블 크로스오버",
     nameEn: "Cable Crossover",
+    type: "machine",
     primaryMuscles: ["chest"],
     secondaryMuscles: ["front-delt", "triceps"],
     steps: [
@@ -152,6 +196,7 @@ export const equipmentList: Equipment[] = [
     slug: "lat-pulldown",
     nameKo: "랫풀다운 머신",
     nameEn: "Lat Pulldown Machine",
+    type: "machine",
     primaryMuscles: ["lats"],
     secondaryMuscles: ["biceps", "rear-delt"],
     steps: [
@@ -170,6 +215,7 @@ export const equipmentList: Equipment[] = [
     slug: "seated-cable-row",
     nameKo: "시티드 케이블 로우",
     nameEn: "Seated Cable Row",
+    type: "machine",
     primaryMuscles: ["lats"],
     secondaryMuscles: ["traps", "rear-delt", "biceps"],
     steps: [
@@ -184,10 +230,30 @@ export const equipmentList: Equipment[] = [
     ],
   },
   {
+    id: "dumbbell-row",
+    slug: "dumbbell-row",
+    nameKo: "원암 덤벨 로우",
+    nameEn: "One-Arm Dumbbell Row",
+    type: "free-weight",
+    primaryMuscles: ["lats"],
+    secondaryMuscles: ["traps", "rear-delt", "biceps"],
+    steps: [
+      "벤치에 한쪽 무릎과 같은 쪽 손을 올리고, 반대쪽 발은 바닥에 둔다.",
+      "등을 바닥과 거의 평행하게 곧게 펴고 반대 손으로 덤벨을 든다.",
+      "숨을 내쉬며 팔꿈치를 엉덩이 쪽으로 끌어올리듯 덤벨을 당긴다.",
+      "등이 늘어나는 느낌이 들 때까지 천천히 내린 뒤, 반대쪽도 같은 횟수를 한다.",
+    ],
+    cautions: [
+      "등을 둥글게 말거나 상체를 비틀며 당기지 않는다.",
+      "팔 힘이 아니라 등으로 당기는 느낌에 집중한다.",
+    ],
+  },
+  {
     id: "assisted-pullup-dip",
     slug: "assisted-pullup-dip",
     nameKo: "어시스트 풀업/딥스 머신",
     nameEn: "Assisted Pull-up / Dip Machine",
+    type: "machine",
     primaryMuscles: ["lats", "triceps"],
     secondaryMuscles: ["biceps", "chest"],
     steps: [
@@ -206,6 +272,7 @@ export const equipmentList: Equipment[] = [
     slug: "back-extension",
     nameKo: "백 익스텐션 벤치",
     nameEn: "Back Extension Bench",
+    type: "bodyweight",
     primaryMuscles: ["erectors"],
     secondaryMuscles: ["glutes", "hamstrings"],
     steps: [
@@ -224,6 +291,7 @@ export const equipmentList: Equipment[] = [
     slug: "shoulder-press",
     nameKo: "숄더 프레스 머신",
     nameEn: "Shoulder Press Machine",
+    type: "machine",
     primaryMuscles: ["front-delt", "side-delt"],
     secondaryMuscles: ["triceps", "traps"],
     steps: [
@@ -242,6 +310,7 @@ export const equipmentList: Equipment[] = [
     slug: "lateral-raise",
     nameKo: "레터럴 레이즈 머신",
     nameEn: "Lateral Raise Machine",
+    type: "machine",
     primaryMuscles: ["side-delt"],
     secondaryMuscles: ["traps"],
     steps: [
@@ -256,10 +325,30 @@ export const equipmentList: Equipment[] = [
     ],
   },
   {
+    id: "reverse-pec-deck",
+    slug: "reverse-pec-deck",
+    nameKo: "리버스 펙덱 머신",
+    nameEn: "Reverse Pec Deck Machine",
+    type: "machine",
+    primaryMuscles: ["rear-delt"],
+    secondaryMuscles: ["traps"],
+    steps: [
+      "펙덱 머신의 손잡이를 뒤쪽 끝으로 돌려 두고, 가슴을 등받이 쪽 패드에 대고 앉는다.",
+      "손잡이가 어깨 높이에 오도록 시트를 맞추고 팔을 앞으로 뻗어 잡는다.",
+      "팔꿈치를 살짝 굽힌 채 양팔을 옆으로 벌려 몸과 일직선이 될 때까지 당긴다.",
+      "천천히 팔을 앞으로 모은다.",
+    ],
+    cautions: [
+      "어깨를 으쓱하거나 견갑골을 세게 모으면 승모근 운동이 되므로 팔을 벌리는 데 집중한다.",
+      "상체를 뒤로 젖혀 반동을 쓰지 않는다.",
+    ],
+  },
+  {
     id: "smith-machine",
     slug: "smith-machine",
     nameKo: "스미스 머신",
     nameEn: "Smith Machine",
+    type: "machine",
     primaryMuscles: ["quads", "glutes"],
     secondaryMuscles: ["chest", "front-delt", "hamstrings"],
     steps: [
@@ -280,6 +369,7 @@ export const equipmentList: Equipment[] = [
     slug: "leg-press",
     nameKo: "레그 프레스",
     nameEn: "Leg Press",
+    type: "machine",
     primaryMuscles: ["quads", "glutes"],
     secondaryMuscles: ["hamstrings", "adductors"],
     steps: [
@@ -300,6 +390,7 @@ export const equipmentList: Equipment[] = [
     slug: "leg-extension",
     nameKo: "레그 익스텐션",
     nameEn: "Leg Extension",
+    type: "machine",
     primaryMuscles: ["quads"],
     secondaryMuscles: [],
     steps: [
@@ -318,6 +409,7 @@ export const equipmentList: Equipment[] = [
     slug: "leg-curl",
     nameKo: "레그 컬",
     nameEn: "Leg Curl",
+    type: "machine",
     primaryMuscles: ["hamstrings"],
     secondaryMuscles: ["calves"],
     steps: [
@@ -336,6 +428,7 @@ export const equipmentList: Equipment[] = [
     slug: "hack-squat",
     nameKo: "핵 스쿼트 머신",
     nameEn: "Hack Squat Machine",
+    type: "machine",
     primaryMuscles: ["quads"],
     secondaryMuscles: ["glutes", "hamstrings"],
     steps: [
@@ -351,10 +444,31 @@ export const equipmentList: Equipment[] = [
     ],
   },
   {
+    id: "dumbbell-squat",
+    slug: "dumbbell-squat",
+    nameKo: "덤벨 스쿼트 (고블릿)",
+    nameEn: "Dumbbell Goblet Squat",
+    type: "free-weight",
+    primaryMuscles: ["quads", "glutes"],
+    secondaryMuscles: ["hamstrings", "adductors"],
+    steps: [
+      "덤벨 하나를 세워 양손으로 위쪽 끝을 감싸 쥐고 가슴 앞에 붙인다.",
+      "발을 어깨너비보다 조금 넓게 벌리고 발끝을 살짝 바깥으로 둔다.",
+      "숨을 들이마시며 가슴을 편 채 허벅지가 바닥과 평행할 때까지 앉는다.",
+      "숨을 내쉬며 발바닥 전체로 밀어 일어선다.",
+    ],
+    cautions: [
+      "무릎이 안쪽으로 모이지 않게, 발끝 방향으로 밀어낸다.",
+      "허리가 둥글게 말리기 전까지만 앉는다.",
+      "뒤꿈치가 바닥에서 뜨지 않게 한다.",
+    ],
+  },
+  {
     id: "hip-abduction-adduction",
     slug: "hip-abduction-adduction",
     nameKo: "힙 어브덕션/어덕션 머신",
     nameEn: "Hip Abduction / Adduction Machine",
+    type: "machine",
     primaryMuscles: ["glutes", "adductors"],
     secondaryMuscles: [],
     steps: [
@@ -373,6 +487,7 @@ export const equipmentList: Equipment[] = [
     slug: "preacher-curl",
     nameKo: "프리처 컬 머신",
     nameEn: "Preacher Curl Machine",
+    type: "machine",
     primaryMuscles: ["biceps"],
     secondaryMuscles: [],
     steps: [
@@ -387,10 +502,30 @@ export const equipmentList: Equipment[] = [
     ],
   },
   {
+    id: "cable-pushdown",
+    slug: "cable-pushdown",
+    nameKo: "케이블 푸시다운",
+    nameEn: "Cable Triceps Pushdown",
+    type: "machine",
+    primaryMuscles: ["triceps"],
+    secondaryMuscles: [],
+    steps: [
+      "도르래를 가장 높은 곳에 맞추고 짧은 바나 로프 손잡이를 단다.",
+      "손잡이를 잡고 팔꿈치를 옆구리에 붙인 채 상체를 살짝 숙인다.",
+      "숨을 내쉬며 팔꿈치를 고정하고 팔이 거의 펴질 때까지 손잡이를 아래로 민다.",
+      "팔뚝이 바닥과 평행해질 때까지 천천히 되돌린다.",
+    ],
+    cautions: [
+      "팔꿈치가 앞뒤로 움직이면 어깨와 등이 대신 일하므로 옆구리에 고정한다.",
+      "상체를 크게 숙여 몸무게로 누르지 않는다.",
+    ],
+  },
+  {
     id: "calf-raise",
     slug: "calf-raise",
     nameKo: "카프 레이즈 머신",
     nameEn: "Calf Raise Machine",
+    type: "machine",
     primaryMuscles: ["calves"],
     secondaryMuscles: [],
     steps: [
@@ -409,6 +544,7 @@ export const equipmentList: Equipment[] = [
     slug: "ab-crunch",
     nameKo: "앱도미널 크런치 머신",
     nameEn: "Abdominal Crunch Machine",
+    type: "machine",
     primaryMuscles: ["abs"],
     secondaryMuscles: [],
     steps: [
@@ -455,9 +591,11 @@ export function filterEquipment(
   list: Equipment[],
   query: string,
   group: MuscleGroupId | null,
+  type: EquipmentType | null = null,
 ): Equipment[] {
   const q = normalize(query);
   return list.filter((e) => {
+    if (type && e.type !== type) return false;
     if (q && !normalize(e.nameKo).includes(q) && !normalize(e.nameEn).includes(q)) {
       return false;
     }

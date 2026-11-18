@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Equipment } from "@/data/equipment";
+import { equipmentTypeName, type Equipment } from "@/data/equipment";
 import { getMuscle } from "@/data/muscles";
 import EquipmentImage from "./EquipmentImage";
 
@@ -19,6 +19,9 @@ export default function EquipmentCard({ equipment }: { equipment: Equipment }) {
         <p className="truncate font-semibold">{equipment.nameKo}</p>
         <p className="truncate text-xs text-sub">{equipment.nameEn}</p>
         <ul className="mt-1.5 flex flex-wrap gap-1">
+          <li className="rounded-full border border-line px-2 py-0.5 text-xs text-sub">
+            {equipmentTypeName(equipment.type)}
+          </li>
           {equipment.primaryMuscles.map((m) => (
             <li
               key={m}
