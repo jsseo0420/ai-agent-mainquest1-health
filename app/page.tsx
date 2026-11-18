@@ -2,45 +2,32 @@ import Link from "next/link";
 import BodyMap from "@/components/BodyMap";
 import Logo from "@/components/Logo";
 import SearchForm from "@/components/SearchForm";
-import { equipmentList } from "@/data/equipment";
-import { muscles } from "@/data/muscles";
+import TodayRoutinePicker from "./TodayRoutinePicker";
 
 export default function Home() {
   return (
     <main className="-mx-4 -mb-24 min-h-dvh bg-night px-4 pb-28 text-white">
-
       <header className="flex h-14 items-center">
         <Logo tone="dark" />
       </header>
 
-      <section className="pt-6">
-        <p className="text-sm font-bold italic text-accent">헬스 입문자를 위한 기구·근육 지도</p>
-        <h1 className="mt-2 text-[2.5rem] font-black italic leading-[1.05] tracking-tight">
-          기구 앞에서
-          <br />
-          <span className="text-accent">망설이지 마.</span>
+      <section className="pt-4">
+        <p className="text-xs font-bold italic text-accent">헬스 입문자를 위한 기구·근육 지도</p>
+        <h1 className="mt-1 text-2xl font-black italic leading-tight tracking-tight">
+          기구 앞에서 <span className="text-accent">망설이지 마.</span>
         </h1>
-        <dl className="mt-5 flex gap-6 text-night-sub">
-          <div>
-            <dt className="text-xs">운동</dt>
-            <dd className="text-2xl font-black italic text-white">{equipmentList.length}</dd>
-          </div>
-          <div>
-            <dt className="text-xs">부위</dt>
-            <dd className="text-2xl font-black italic text-white">{muscles.length}</dd>
-          </div>
-          <div>
-            <dt className="text-xs">루틴 추천</dt>
-            <dd className="text-2xl font-black italic text-white">주 3회</dd>
-          </div>
-        </dl>
       </section>
 
-      <div className="mt-7">
+      <div className="mt-5">
         <SearchForm tone="dark" />
       </div>
 
-      <nav aria-label="찾기 방식" className="mt-4 grid gap-2.5">
+      <div className="mt-4">
+        <TodayRoutinePicker />
+      </div>
+
+      <h2 className="mt-8 text-sm font-bold text-night-sub">찾아보기</h2>
+      <nav aria-label="찾기 방식" className="mt-2 grid gap-2.5">
         <Link
           href="/equipment"
           className="flex items-center justify-between gap-3 rounded-lg bg-accent p-5 text-on-accent transition-colors hover:bg-accent-hover"
