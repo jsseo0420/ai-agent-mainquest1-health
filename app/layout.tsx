@@ -10,6 +10,12 @@ export const metadata: Metadata = {
     template: "%s | MAPSCLE",
   },
   applicationName: "MAPSCLE",
+  // 아이폰에서 홈 화면에 추가했을 때의 이름과 상단 상태 표시줄 색
+  appleWebApp: {
+    capable: true,
+    title: "MAPSCLE",
+    statusBarStyle: "black",
+  },
   description: "헬스 입문자를 위한 기구·근육 지도. 기구별 운동 자세와 자극 부위, 부위별 운동 기구, 체성분 결과지 루틴 추천까지.",
 };
 
