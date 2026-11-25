@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "결과지로 루틴 추천" };
 export default function RoutinePage() {
   return (
     <main>
-      <PageHeader title="결과지로 루틴 추천" backHref="/" backLabel="홈으로" />
+      <PageHeader title="결과지로 루틴 추천" backHref="/" backLabel="홈으로" tone="dark" />
       <RoutineRecommender />
     </main>
   );

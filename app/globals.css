@@ -35,6 +35,15 @@
   }
 }
 
+@keyframes scan-line {
+  from {
+    top: 4%;
+  }
+  to {
+    top: 92%;
+  }
+}
+
 body {
   background: #ffffff;
   color: var(--color-ink);

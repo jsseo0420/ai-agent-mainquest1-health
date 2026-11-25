@@ -2,9 +2,19 @@
 // 기준은 PoC 저장소의 prompts/routine_guidelines.md와 같다 (의료적 판단에 쓰지 않는 단순 기준).
 import type { Assessment, Level, Measurements, Sex } from "./types";
 
+// 체지방률 표준 범위 (%). 화면의 게이지도 이 값을 쓴다.
+export function fatRange(sex: Sex): [number, number] {
+  return sex === "M" ? [10, 20] : [18, 28];
+}
+
+// 골격근량 ÷ 체중(%)이 이 값보다 작으면 근육량 "낮음"
+export function muscleRatioMin(sex: Sex): number {
+  return sex === "M" ? 40 : 34;
+}
+
 export function assess(m: Measurements, sex: Sex): Assessment {
   const male = sex === "M";
-  const [lo, hi] = male ? [10, 20] : [18, 28];
+  const [lo, hi] = fatRange(sex);
   const pbf = m.body_fat_pct;
   const fat: Level = pbf == null ? "알 수 없음" : pbf < lo ? "낮음" : pbf > hi ? "높음" : "표준";
   const bmi: Level = m.bmi == null ? "알 수 없음" : m.bmi < 18.5 ? "낮음" : m.bmi >= 25 ? "높음" : "표준";
@@ -12,7 +22,7 @@ export function assess(m: Measurements, sex: Sex): Assessment {
   const muscle: Level =
     !m.weight_kg || !m.skeletal_muscle_kg
       ? "알 수 없음"
-      : m.skeletal_muscle_kg / m.weight_kg < (male ? 0.4 : 0.34)
+      : m.skeletal_muscle_kg / m.weight_kg < muscleRatioMin(sex) / 100
         ? "낮음"
         : "표준";
 
