@@ -23,6 +23,7 @@
 - `lib/storage/`: 즐겨찾기·운동 기록 저장소. 로그인 전은 `localStorage`, 로그인 후는 Supabase. 닉네임은 `profile.ts`. 비밀번호 재설정·회원 탈퇴(`delete_my_account` RPC)는 `lib/auth.ts`
 - `lib/supabase/client.ts`: 브라우저용 Supabase 클라이언트. 환경변수가 없으면 `null`
 - `lib/routine/`: 결과지로 루틴 추천(`/routine`). 수치 판정(`assess.ts`), 프롬프트(`prompts.ts`), 도감 밖 운동 제거(`filter.ts`), 서버 전용 Gemini 호출(`gemini.ts`, `app/api/routine/*`에서만 import)
+- `lib/today/generate.ts`: 오늘의 루틴(`/today`) 생성 규칙. LLM 없이 부위·목표·시간·기록·즐겨찾기로 고른다. 기록 입력 창은 `components/LogSheet.tsx`를 운동 기록과 함께 쓴다
 - `supabase/migrations/`: DB 스키마와 RLS 정책 SQL
 
 ## 코드 규칙

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const tabs = [
-  { href: "/", label: "홈", icon: HomeIcon, match: (p: string) => p === "/" || p.startsWith("/equipment") || p.startsWith("/muscles") || p.startsWith("/routine") },
+  { href: "/", label: "홈", icon: HomeIcon, match: (p: string) => p === "/" || p.startsWith("/equipment") || p.startsWith("/muscles") || p.startsWith("/routine") || p.startsWith("/today") },
   { href: "/favorites", label: "즐겨찾기", icon: StarIcon, match: (p: string) => p.startsWith("/favorites") },
   { href: "/logs", label: "운동 기록", icon: NoteIcon, match: (p: string) => p.startsWith("/logs") },
   { href: "/account", label: "내 정보", icon: UserIcon, match: (p: string) => p.startsWith("/account") },

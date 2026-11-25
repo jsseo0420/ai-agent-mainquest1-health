@@ -1,13 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { muscleGroups, type MuscleGroupId } from "@/data/muscles";
 
-// 홈의 "오늘의 루틴 만들기". 운동하고 싶은 부위를 고르고 버튼을 누르는 화면만 먼저 만들었다.
-// 루틴 생성 기능은 UI 작업이 끝난 뒤 붙인다. 지금은 누르면 준비 중이라고 안내한다.
+// 홈의 "오늘의 루틴 만들기". 운동하고 싶은 부위를 고르면 /today에서 루틴을 짜 준다.
 export default function TodayRoutinePicker() {
+  const router = useRouter();
   const [selected, setSelected] = useState<MuscleGroupId[]>([]);
-  const [message, setMessage] = useState<{ tone: "hint" | "soon"; text: string } | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   function toggle(id: MuscleGroupId) {
     setMessage(null);
@@ -16,11 +17,11 @@ export default function TodayRoutinePicker() {
 
   function submit() {
     if (selected.length === 0) {
-      setMessage({ tone: "hint", text: "운동하고 싶은 부위를 하나 이상 골라 주세요." });
+      setMessage("운동하고 싶은 부위를 하나 이상 골라 주세요.");
       return;
     }
-    const names = muscleGroups.filter((g) => selected.includes(g.id)).map((g) => g.name);
-    setMessage({ tone: "soon", text: `${names.join("·")} 루틴 만들기는 곧 열려요. 조금만 기다려 주세요.` });
+    const ordered = muscleGroups.filter((g) => selected.includes(g.id)).map((g) => g.id);
+    router.push(`/today?groups=${ordered.join(",")}`);
   }
 
   return (
@@ -66,9 +67,9 @@ export default function TodayRoutinePicker() {
 
       <p
         aria-live="polite"
-        className={`text-sm ${message ? "mt-3" : ""} ${message?.tone === "hint" ? "text-accent" : "text-white"}`}
+        className={`text-sm text-accent ${message ? "mt-3" : ""}`}
       >
-        {message?.text}
+        {message}
       </p>
     </section>
   );
