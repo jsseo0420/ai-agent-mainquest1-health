@@ -9,11 +9,11 @@ export const metadata: Metadata = { title: "운동 기록" };
 export default function LogsPage() {
   return (
     <main>
-      <PageHeader title="운동 기록" />
-      <LocalOnlyNotice />
+      <PageHeader title="운동 기록" tone="dark" />
       <Suspense fallback={<p className="py-8 text-center text-sub">불러오는 중…</p>}>
         <WorkoutLogs />
       </Suspense>
+      <LocalOnlyNotice />
     </main>
   );
 }
