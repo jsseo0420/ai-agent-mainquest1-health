@@ -8,9 +8,9 @@ export const metadata: Metadata = { title: "즐겨찾기" };
 export default function FavoritesPage() {
   return (
     <main>
-      <PageHeader title="즐겨찾기" />
-      <LocalOnlyNotice />
+      <PageHeader title="즐겨찾기" tone="dark" />
       <FavoriteList />
+      <LocalOnlyNotice />
     </main>
   );
 }
