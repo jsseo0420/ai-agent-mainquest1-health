@@ -107,3 +107,41 @@ export async function signUp(
 export async function signOut(): Promise<void> {
   await getSupabase()?.auth.signOut();
 }
+
+// 비밀번호 재설정 메일을 보낸다. 메일의 링크를 누르면 /account/reset-password로 돌아와
+// 그 브라우저에서 잠시 로그인된 상태가 되고, 거기서 새 비밀번호를 정한다.
+// Supabase 대시보드 Authentication → URL Configuration의 Redirect URLs에 이 주소가 있어야 한다.
+export async function requestPasswordReset(email: string): Promise<string | null> {
+  const supabase = getSupabase();
+  if (!supabase) return "로그인 서버가 설정되지 않았어요.";
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/account/reset-password`,
+  });
+  return error ? authErrorMessage(error.message) : null;
+}
+
+export async function updatePassword(password: string): Promise<string | null> {
+  const supabase = getSupabase();
+  if (!supabase) return "로그인 서버가 설정되지 않았어요.";
+  const { error } = await supabase.auth.updateUser({ password });
+  if (!error) return null;
+  if (error.message.toLowerCase().includes("different from the old"))
+    return "지금 비밀번호와 다른 비밀번호로 정해 주세요.";
+  return authErrorMessage(error.message);
+}
+
+// 회원 탈퇴: 본인 계정과 즐겨찾기·운동 기록을 모두 지운다 (DB 함수 delete_my_account).
+export async function deleteAccount(): Promise<string | null> {
+  const supabase = getSupabase();
+  if (!supabase) return "로그인 서버가 설정되지 않았어요.";
+  const { error } = await supabase.rpc("delete_my_account");
+  if (error) {
+    // 함수가 아직 DB에 없으면 (마이그레이션을 실행하지 않았으면) 404·PGRST202가 온다.
+    if (error.code === "PGRST202" || error.message.includes("Could not find the function"))
+      return "탈퇴 기능이 아직 준비되지 않았어요. 잠시 후 다시 시도해 주세요.";
+    return authErrorMessage(error.message);
+  }
+  // 서버에서 계정이 지워졌으므로 이 브라우저의 세션도 정리한다.
+  await supabase.auth.signOut({ scope: "local" });
+  return null;
+}

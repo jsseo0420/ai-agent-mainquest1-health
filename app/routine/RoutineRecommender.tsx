@@ -162,7 +162,7 @@ export default function RoutineRecommender() {
           )}
 
           <ul className="mt-5 space-y-1 rounded-2xl bg-surface p-4 text-xs text-sub">
-            <li>· 사진은 수치를 읽기 위해 Google Gemini로 보내고, 헬스도감에는 저장하지 않아요.</li>
+            <li>· 사진은 수치를 읽기 위해 Google Gemini로 보내고, MAPSCLE에는 저장하지 않아요.</li>
             <li>· 결과지 전체가 보이게, 반사 없이 정면에서 찍으면 더 정확해요.</li>
             <li>· 추천 루틴은 운동 참고용이며 의료 조언이 아니에요.</li>
           </ul>
