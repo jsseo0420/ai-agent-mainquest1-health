@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Logo from "@/components/Logo";
+import { equipmentList } from "@/data/equipment";
 import { SPLASH_DONE_EVENT } from "@/components/Splash";
 import { markOnboarded } from "@/lib/storage/onboarding";
 
@@ -12,7 +13,7 @@ const slides = [
     image: "/images/onboarding/1.webp",
     alt: "레그 프레스 머신 앞에서 기구를 올려다보는 사람과 큰 물음표",
     title: "이 기구,\n어떻게 쓰지?",
-    body: "기구 25종의 자세와 주의사항을 기구 앞에서 바로 확인해요.",
+    body: `기구 ${equipmentList.length}종의 자세와 주의사항을 기구 앞에서 바로 확인해요.`,
   },
   {
     image: "/images/onboarding/2.webp",
