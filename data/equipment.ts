@@ -138,6 +138,10 @@ export const equipmentList: Equipment[] = [
     nameKo: "인클라인 벤치프레스",
     nameEn: "Incline Bench Press",
     type: "free-weight",
+    equipmentPhoto: {
+      src: "/images/equipment/incline-bench-press.jpg",
+      alt: "비스듬히 세운 등받이 벤치와 위쪽 거치대에 바벨이 걸린 인클라인 벤치프레스",
+    },
     primaryMuscles: ["chest"],
     secondaryMuscles: ["front-delt", "triceps"],
     steps: [
@@ -178,6 +182,10 @@ export const equipmentList: Equipment[] = [
     nameKo: "케이블 크로스오버",
     nameEn: "Cable Crossover",
     type: "machine",
+    equipmentPhoto: {
+      src: "/images/equipment/cable-crossover.jpg",
+      alt: "양쪽 무게 추 기둥이 위쪽 프레임으로 이어지고 도르래마다 손잡이가 달린 케이블 크로스오버",
+    },
     primaryMuscles: ["chest"],
     secondaryMuscles: ["front-delt", "triceps"],
     steps: [
@@ -197,6 +205,10 @@ export const equipmentList: Equipment[] = [
     nameKo: "랫풀다운 머신",
     nameEn: "Lat Pulldown Machine",
     type: "machine",
+    equipmentPhoto: {
+      src: "/images/equipment/lat-pulldown.jpg",
+      alt: "허벅지 고정 패드가 달린 의자와 위쪽 케이블에 긴 바가 매달린 랫풀다운 머신",
+    },
     primaryMuscles: ["lats"],
     secondaryMuscles: ["biceps", "rear-delt"],
     steps: [
@@ -216,6 +228,10 @@ export const equipmentList: Equipment[] = [
     nameKo: "시티드 케이블 로우",
     nameEn: "Seated Cable Row",
     type: "machine",
+    equipmentPhoto: {
+      src: "/images/equipment/seated-cable-row.jpg",
+      alt: "긴 의자 앞에 비스듬한 발판과 V자 손잡이가 달린 케이블이 있는 시티드 케이블 로우",
+    },
     primaryMuscles: ["lats"],
     secondaryMuscles: ["traps", "rear-delt", "biceps"],
     steps: [
@@ -254,6 +270,10 @@ export const equipmentList: Equipment[] = [
     nameKo: "어시스트 풀업/딥스 머신",
     nameEn: "Assisted Pull-up / Dip Machine",
     type: "machine",
+    equipmentPhoto: {
+      src: "/images/equipment/assisted-pullup-dip.jpg",
+      alt: "맨 위 풀업 손잡이, 가운데 딥스 손잡이, 무릎 패드와 발판이 달린 어시스트 풀업/딥스 머신",
+    },
     primaryMuscles: ["lats", "triceps"],
     secondaryMuscles: ["biceps", "chest"],
     steps: [
@@ -273,6 +293,10 @@ export const equipmentList: Equipment[] = [
     nameKo: "백 익스텐션 벤치",
     nameEn: "Back Extension Bench",
     type: "bodyweight",
+    equipmentPhoto: {
+      src: "/images/equipment/back-extension.jpg",
+      alt: "비스듬한 프레임 위쪽에 골반 받침 패드, 아래쪽에 발판과 발목 고정 롤러가 달린 45도 백 익스텐션 벤치",
+    },
     primaryMuscles: ["erectors"],
     secondaryMuscles: ["glutes", "hamstrings"],
     steps: [
@@ -292,6 +316,10 @@ export const equipmentList: Equipment[] = [
     nameKo: "숄더 프레스 머신",
     nameEn: "Shoulder Press Machine",
     type: "machine",
+    equipmentPhoto: {
+      src: "/images/equipment/shoulder-press.jpg",
+      alt: "세운 등받이 의자 양옆 어깨 높이에 위로 미는 손잡이가 있고 옆에 무게 추가 달린 숄더 프레스 머신",
+    },
     primaryMuscles: ["front-delt", "side-delt"],
     secondaryMuscles: ["triceps", "traps"],
     steps: [
@@ -311,6 +339,10 @@ export const equipmentList: Equipment[] = [
     nameKo: "레터럴 레이즈 머신",
     nameEn: "Lateral Raise Machine",
     type: "machine",
+    equipmentPhoto: {
+      src: "/images/equipment/lateral-raise.jpg",
+      alt: "등받이 의자 양옆에 팔을 대고 옆으로 들어 올리는 둥근 패드가 달린 레터럴 레이즈 머신",
+    },
     primaryMuscles: ["side-delt"],
     secondaryMuscles: ["traps"],
     steps: [
@@ -325,11 +357,15 @@ export const equipmentList: Equipment[] = [
     ],
   },
   {
-    id: "reverse-pec-deck",
-    slug: "reverse-pec-deck",
-    nameKo: "리버스 펙덱 머신",
-    nameEn: "Reverse Pec Deck Machine",
+    id: "reverse-pec-deck-fly",
+    slug: "reverse-pec-deck-fly",
+    nameKo: "리버스 펙덱 플라이 머신",
+    nameEn: "Reverse Pec Deck Fly Machine",
     type: "machine",
+    equipmentPhoto: {
+      src: "/images/equipment/reverse-pec-deck-fly.jpg",
+      alt: "높은 등받이 패드가 있는 의자 양옆으로 회전하는 팔과 손잡이가 달린 리버스 펙덱 플라이 머신",
+    },
     primaryMuscles: ["rear-delt"],
     secondaryMuscles: ["traps"],
     steps: [
